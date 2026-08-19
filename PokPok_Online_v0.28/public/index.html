@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>POK POK Online - V0.28</title>
+  <link rel="stylesheet" href="online.css" />
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <img src="assets/logo.png" class="logo" alt="POK POK">
+    <div class="top-actions">
+      <span class="version">V0.28 ONLINE</span>
+      <button id="musicBtn" class="ghost">♫ Musique : ON</button>
+      <button id="rulesBtn" class="ghost">📖 Règles</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="lobby" class="screen active">
+      <div class="lobby-card">
+        <img src="assets/logo.png" class="hero-logo" alt="POK POK">
+        <div class="prototype-pill">PROTOTYPE MULTIJOUEUR • 1 CONTRE 1 • SANS RUBIS</div>
+        <h1>Jouer en ligne</h1>
+        <p class="sub">Première étape du futur matchmaking POK POK : deux vrais joueurs, chacun sur son écran.</p>
+
+        <div class="identity-grid">
+          <label>Votre prénom<input id="nameInput" maxlength="18" value="Jules"></label>
+          <label>Votre animal<select id="avatarInput"></select></label>
+          <label>Objectif<select id="targetInput"><option value="500">500 points</option><option value="1000">1000 points</option></select></label>
+        </div>
+
+        <div class="lobby-actions">
+          <button id="quickBtn" class="primary big">⚡ Match rapide 1v1</button>
+          <button id="createBtn" class="secondary big">Créer un salon privé</button>
+        </div>
+
+        <div class="join-box">
+          <input id="roomCodeInput" maxlength="5" placeholder="CODE" autocomplete="off">
+          <button id="joinBtn" class="secondary">Rejoindre</button>
+        </div>
+
+        <div id="queueBox" class="queue-box hidden"></div>
+        <div id="roomBox" class="room-box hidden">
+          <div>Salon <strong id="roomCodeLabel">-----</strong></div>
+          <div id="roomPlayers">En attente du deuxième joueur…</div>
+          <button id="startOnlineBtn" class="primary hidden">Lancer la partie</button>
+        </div>
+        <p class="note">Cette V0.28 est volontairement séparée de ta V0.27 stable : elle sert uniquement à tester la connexion réseau avant les rubis, salons et classements.</p>
+      </div>
+    </section>
+
+    <section id="game" class="screen">
+      <div id="connectionBanner" class="connection-banner hidden"></div>
+      <div class="arena">
+        <div class="felt"></div>
+        <section id="opponentSeat" class="seat opponent-seat">
+          <div class="seat-head"><span id="oppAvatar" class="avatar"></span><div><b id="oppName">Adversaire</b><small id="oppStatus">Connecté</small></div><span id="oppDealer" class="badge hidden">DONNEUR</span></div>
+          <div id="oppHand" class="mini-hand"></div>
+          <div id="oppScore" class="score-plate">0 pts</div>
+        </section>
+
+        <div class="table-zone">
+          <div class="pile-col"><div class="pile"><img src="assets/card_back.jpg"><span id="drawCount">0</span></div><b>PIOCHE</b></div>
+          <div class="center-panel">
+            <div id="turnTitle" class="turn-title">Connexion…</div>
+            <div id="turnHint" class="turn-hint">Patientez.</div>
+            <div id="eventLine" class="event-line"></div>
+          </div>
+          <div class="pile-col"><div class="pile"><img src="assets/card_back.jpg"><span id="discardCount">0</span></div><b>DÉFAUSSE</b></div>
+        </div>
+
+        <section id="humanSeat" class="seat human-seat">
+          <div class="seat-head human-head"><span id="meAvatar" class="avatar"></span><div><b id="meName">Vous</b><small> • VOTRE MAIN</small><div id="handEval" class="hand-eval">-</div></div><span id="meDealer" class="badge hidden">DONNEUR</span></div>
+          <div id="humanHand" class="human-hand"></div>
+          <div id="actions" class="actions"></div>
+          <div id="meScore" class="score-plate human-score">0 pts</div>
+          <div class="reactions"><button data-emoji="😄">😄</button><button data-emoji="😂">😂</button><button data-emoji="😱">😱</button><button data-emoji="😡">😡</button></div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <div id="eventBurst" class="event-burst hidden"><div id="eventBurstTitle"></div><div id="eventBurstText"></div></div>
+  <div id="roundModal" class="modal hidden"><div class="modal-card"><h2 id="resultTitle">Fin de manche</h2><p id="resultNote"></p><div id="resultHands" class="result-hands"></div><button id="nextRoundBtn" class="primary big hidden">Manche suivante</button></div></div>
+  <div id="rulesModal" class="modal hidden"><div class="modal-card rules-card"><button id="closeRules" class="close">×</button><h2>Règles POK POK</h2><img id="rulePage" src="assets/rules/page-01.jpg"><div class="rule-nav"><button id="prevRule">←</button><span id="ruleCounter">1 / 16</span><button id="nextRule">→</button></div></div></div>
+  <div id="toast" class="toast hidden"></div>
+</div>
+<audio id="menuMusic" src="assets/audio/menu_loop.wav" loop preload="auto"></audio>
+<audio id="gameMusic" src="assets/audio/game_loop.wav" loop preload="auto"></audio>
+<script src="online.js"></script>
+</body>
+</html>

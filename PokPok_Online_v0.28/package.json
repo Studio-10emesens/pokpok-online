@@ -1,0 +1,11 @@
+{
+  "name": "pokpok-online-v028",
+  "version": "0.28.0",
+  "private": true,
+  "description": "Prototype POK POK multijoueur en ligne 1v1, sans rubis.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test_online.js"
+  }
+}

@@ -1,0 +1,18 @@
+POK POK ONLINE — ÉTAPES SUIVANTES
+==================================
+
+V0.28 = prototype réseau 1 contre 1, sans rubis.
+
+Une fois que ce prototype est hébergé et validé sur deux connexions Internet :
+1. Passage à 3-6 joueurs.
+2. Comptes joueurs permanents.
+3. Solde de rubis côté serveur.
+4. Bonus quotidien de 50 rubis.
+5. Salons : Débutant 10 / Intermédiaire 20 / Expert 50 / Légende 100.
+6. Le serveur bloque la mise au début et crédite le pot au gagnant.
+7. Matchmaking par salon + nombre de joueurs.
+8. Historique des parties et protections anti-triche.
+9. Android et PC connectés au même serveur.
+
+Important : les rubis ne devront jamais être stockés uniquement dans le téléphone.
+Le serveur restera la source de vérité pour le solde, les mises, les résultats et les récompenses.
