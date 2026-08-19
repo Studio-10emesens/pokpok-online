@@ -1,0 +1,1454 @@
+:root{
+  --purple:#30004b;--purple2:#130019;--ink:#0d0810;--pink:#ef1688;--gold:#ffd900;
+  --cream:#fff8eb;--muted:#cdbfd4;--panel:rgba(18,8,26,.88);--line:rgba(255,217,0,.42);
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:radial-gradient(circle at 50% 12%,#60107a 0,#30004b 34%,#170021 68%,#09000e 100%);color:#fff;font-family:Inter,Segoe UI,Arial,sans-serif}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.065;background-image:linear-gradient(115deg,transparent 0 47%,#fff 48% 48.4%,transparent 49%),linear-gradient(35deg,transparent 0 49%,#ff0 50% 50.3%,transparent 51%);background-size:190px 190px,250px 250px}
+button,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+#app{height:100dvh;overflow:hidden}
+.topbar{height:60px;padding:6px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:rgba(8,0,12,.78);backdrop-filter:blur(8px);position:relative;z-index:20}
+.logo{height:47px;max-width:170px;object-fit:contain}.top-meta{display:flex;align-items:center;gap:8px;color:var(--muted);font-weight:800;font-size:.86rem}
+.ghost-btn{border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.07);color:#fff;border-radius:11px;padding:7px 11px}.ghost-btn:hover{background:rgba(255,255,255,.14)}
+main{height:calc(100dvh - 60px);max-width:1500px;margin:auto;padding:8px 12px;overflow:hidden}.screen{display:none;height:100%}.screen.active{display:block}
+.panel{background:var(--panel);border:1px solid rgba(255,255,255,.13);border-radius:17px;box-shadow:0 12px 38px rgba(0,0,0,.28);backdrop-filter:blur(9px)}
+
+/* Accueil */
+#startScreen.active{display:grid;place-items:center}.start-card{width:min(830px,94vw);max-height:calc(100dvh - 78px);padding:16px 24px;text-align:center;border:2px solid rgba(255,217,0,.30);overflow:hidden}.start-logo{width:min(390px,62%);max-height:112px;object-fit:contain}.tagline{font-weight:900;color:#fff0a5;letter-spacing:.3px;margin:3px 0 10px}.setup-title{font-weight:1000;color:#fff3a0;margin-bottom:6px}.avatar-setup{padding:7px 10px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08)}
+.avatar-picker{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:5px;max-width:720px;margin:auto}.avatar-option{min-width:0;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.18);color:#e8dced;border-radius:11px;padding:5px 2px 4px;display:grid;place-items:center;gap:2px;font-size:.66rem;font-weight:800;transition:.16s ease}.avatar-option:hover{transform:translateY(-2px);border-color:rgba(255,217,0,.65)}.avatar-option.selected{border-color:var(--gold);box-shadow:0 0 0 1px rgba(255,217,0,.2) inset,0 6px 18px rgba(255,217,0,.08);background:rgba(255,217,0,.08)}.avatar-choice-label{font-size:.78rem;color:var(--muted);margin-top:4px}.setup-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0;text-align:left}.setup-grid label{font-weight:900;color:#f4e9fa;font-size:.82rem}.setup-grid select{width:100%;margin-top:5px;padding:9px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:#190b22;color:#fff}.small-note{color:var(--muted);font-size:.76rem;margin:8px 0 0;line-height:1.3}
+.primary{border:0;border-radius:12px;padding:10px 16px;background:linear-gradient(135deg,var(--pink),#b100ff);color:#fff;font-weight:1000;letter-spacing:.3px;box-shadow:0 7px 18px rgba(239,22,136,.22);transition:.16s ease}.primary:hover{filter:brightness(1.08);transform:translateY(-1px)}.primary:disabled{filter:grayscale(.9);opacity:.45;cursor:not-allowed;transform:none}.primary.big{padding:11px 24px;font-size:1rem}.secondary{border:1px solid rgba(255,255,255,.23);border-radius:12px;padding:9px 14px;background:rgba(255,255,255,.09);color:#fff;font-weight:900}.gold{background:linear-gradient(135deg,#ffd900,#ff9700);color:#1d0c00}.danger{background:linear-gradient(135deg,#ff3a6b,#9c0031)}
+
+/* Avatars */
+.avatar{width:34px;height:34px;flex:0 0 34px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(145deg,hsl(var(--avatar-hue,320) 85% 58%),hsl(calc(var(--avatar-hue,320) + 55) 75% 31%));border:1px solid rgba(255,255,255,.45);box-shadow:0 4px 12px rgba(0,0,0,.28),inset 0 0 12px rgba(255,255,255,.12);font-size:21px;line-height:1}.picker-avatar{width:31px;height:31px;font-size:20px}.score-avatar{width:27px;height:27px;flex-basis:27px;font-size:17px}.opponent-avatar{width:34px;height:34px;font-size:21px}.human-avatar{width:42px;height:42px;flex-basis:42px;font-size:27px}.result-avatar{width:29px;height:29px;flex-basis:29px;font-size:18px}.big-avatar{grid-row:1/span 2;width:42px;height:42px;flex-basis:42px;font-size:27px}
+
+/* Écran de jeu : volontairement contenu dans 1 viewport */
+#gameScreen.active{display:grid;grid-template-rows:auto auto minmax(91px,15vh) minmax(188px,31vh) minmax(52px,8vh);gap:6px;overflow:hidden}.scoreboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:6px;min-height:0}.score-chip{min-width:0;padding:5px 8px;border-radius:11px;border:1px solid rgba(255,255,255,.13);background:rgba(0,0,0,.22)}.score-chip.active{border-color:var(--gold);animation:scoreGlow 1.6s ease-in-out infinite alternate}.score-top{display:flex;align-items:center;gap:6px;min-width:0}.score-name{font-size:.68rem;color:var(--muted);font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.score-value{font-size:1rem;font-weight:1000}.score-value.negative{color:#ff759c}
+.opponents{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:6px;min-height:0}.opponent{min-width:0;background:rgba(10,3,15,.64);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:6px 7px;position:relative;overflow:hidden;transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease,filter .25s ease}.opponent.active{transform:translateY(-2px);border-color:var(--gold);box-shadow:0 0 22px rgba(255,217,0,.10)}.opponent.thinking:after{content:"";position:absolute;inset:-1px;border-radius:15px;border:2px solid rgba(255,217,0,.57);animation:opponentPulse 1.35s ease-in-out infinite;pointer-events:none}.opponent.is-blocked{filter:saturate(.55);box-shadow:inset 0 0 0 999px rgba(239,22,136,.035)}.opponent-top{display:flex;justify-content:space-between;align-items:center;gap:5px;margin-bottom:3px}.opponent-id{display:flex;align-items:center;gap:6px;min-width:0}.opponent-id>span:last-child{display:flex;flex-direction:column;min-width:0}.opponent-name{font-weight:1000;font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.opponent-id small{font-size:.59rem;color:#a990b6;text-transform:uppercase;letter-spacing:.6px}.badge{font-size:.58rem;border-radius:999px;padding:3px 5px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.15);margin-left:2px;white-space:nowrap}.badge.hot{background:rgba(239,22,136,.2);border-color:var(--pink)}.badge.gold{background:rgba(255,217,0,.15);border-color:var(--gold);color:#fff3a0}.mini-hand{display:flex;justify-content:center;align-items:end;height:48px}.mini-card{width:34px;height:48px;object-fit:contain;background:#24152a;border-radius:4px;border:1px solid rgba(255,255,255,.17);margin-left:-8px;box-shadow:0 2px 7px rgba(0,0,0,.28);transform:rotate(calc((var(--mini,0) - 2) * 2deg));transform-origin:50% 120%}.mini-card:first-child{margin-left:0}.opponent.active .mini-card{animation:miniBreath 1.8s ease-in-out infinite alternate}.opponent-foot{text-align:center;color:#cdbfd4;font-size:.63rem;margin-top:1px;min-height:12px}.thinking-dots span{display:inline-block;animation:dotBounce 1.15s infinite}.thinking-dots span:nth-child(2){animation-delay:.15s}.thinking-dots span:nth-child(3){animation-delay:.30s}
+.table-zone{display:grid;grid-template-columns:82px minmax(190px,1fr) 82px;align-items:center;gap:12px;max-width:690px;width:100%;margin:auto;min-height:0}.pile-wrap{text-align:center}.pile{width:68px;aspect-ratio:708/1063;margin:auto;position:relative;border-radius:8px;border:2px solid rgba(255,255,255,.18);background:none;padding:0;box-shadow:0 7px 16px rgba(0,0,0,.28);transition:.18s ease}.pile img{display:block;width:100%;height:100%;object-fit:contain;border-radius:6px;background:#1a0b20}.pile:not(.inactive-pile):not(:disabled){animation:pileReady 1.8s ease-in-out infinite alternate}.pile:not(.inactive-pile):not(:disabled):hover{transform:translateY(-4px);box-shadow:0 11px 22px rgba(0,0,0,.35),0 0 0 2px var(--gold)}.pile-count{position:absolute;right:-9px;top:-9px;min-width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#0c0311;color:var(--gold);border:2px solid var(--gold);font-size:.68rem;font-weight:1000}.pile-label{font-size:.61rem;margin-top:3px;color:var(--muted);font-weight:900;letter-spacing:1.5px}.panel-mini{padding:10px 14px;text-align:center;background:rgba(12,3,17,.64);border:1px solid rgba(255,217,0,.23);border-radius:14px}.turn-title{font-size:1rem;font-weight:1000;color:var(--gold)}.turn-hint{margin-top:3px;color:#eadff0;line-height:1.2;font-size:.78rem}
+.human-zone{padding:7px 10px 6px;min-height:0;overflow:hidden}.human-heading{display:flex;justify-content:space-between;align-items:center;min-height:38px}.human-title-wrap{display:flex;align-items:center;gap:8px}.eyebrow{font-size:.61rem;font-weight:1000;letter-spacing:1.6px;color:#bfaec8}.hand-eval{font-size:.93rem;font-weight:1000;color:#fff2a4}.human-badges{display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end}.human-hand{height:calc(100% - 76px);min-height:112px;display:flex;justify-content:center;align-items:flex-end;gap:0;padding:7px 3px 1px;perspective:1000px;overflow:visible}.hand-card{height:min(20.7vh,158px);aspect-ratio:416/603;width:auto;border:0;padding:0;border-radius:10px;background:#fff;position:relative;flex:0 1 auto;box-shadow:0 6px 17px rgba(0,0,0,.34);transition:.18s ease;outline:2px solid transparent;transform:rotate(var(--fan-rot,0deg));transform-origin:50% 114%;overflow:hidden;margin-left:-6px}.hand-card:first-child{margin-left:0}.hand-card img{display:block;width:100%;height:100%;object-fit:contain;background:#fff;border-radius:8px}.hand-card:hover{transform:translateY(-8px) rotate(var(--fan-rot,0deg)) scale(1.018);z-index:4}.hand-card.selected{transform:translateY(-15px) rotate(var(--fan-rot,0deg)) scale(1.028);z-index:5;outline-color:var(--gold);box-shadow:0 10px 24px rgba(0,0,0,.42),0 0 0 3px rgba(255,217,0,.28)}.hand-card.inactive{opacity:.84}.hand-card.inactive:hover{transform:rotate(var(--fan-rot,0deg));z-index:auto}.actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;min-height:34px;align-items:center;padding-top:3px}.actions button{padding:8px 13px;font-size:.82rem}.action-hint{color:var(--muted);font-weight:800;font-size:.76rem}.primary.gold{animation:pokButton 1.35s ease-in-out infinite alternate}
+.log-panel{padding:5px 10px;min-height:0;overflow:hidden}.game-log{height:calc(100% - 13px);overflow:hidden;margin-top:1px;font-size:.68rem;color:#e4d8ea;line-height:1.22;display:flex;flex-direction:column}.log-line{padding:1px 0;border-bottom:1px dashed rgba(255,255,255,.05);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.log-line strong{color:#fff1a3}
+
+/* Choix de cible en overlay pour ne jamais agrandir la page */
+.target-chooser{position:fixed;z-index:46;left:50%;top:48%;transform:translate(-50%,-50%);width:min(900px,92vw);padding:15px;background:linear-gradient(135deg,rgba(49,6,63,.98),rgba(23,4,30,.98));border:2px solid rgba(255,217,0,.42);border-radius:18px;text-align:center;box-shadow:0 25px 80px rgba(0,0,0,.55);animation:chooserIn .28s ease-out}.target-title{font-weight:1000;font-size:1.06rem;color:#fff3a0}.target-sub{font-size:.76rem;color:#d8c9df;margin:4px 0 10px}.target-buttons{display:flex;gap:7px;justify-content:center;flex-wrap:wrap}.target-player{min-width:132px;border:1px solid rgba(255,255,255,.20);border-radius:14px;padding:8px 10px;background:rgba(9,2,14,.72);color:#fff;display:grid;grid-template-columns:42px 1fr;grid-template-rows:auto auto;column-gap:8px;text-align:left;align-items:center;transition:.17s ease}.target-player:hover{transform:translateY(-3px) scale(1.02);border-color:var(--gold);box-shadow:0 10px 24px rgba(255,217,0,.12)}.target-player strong{font-size:.85rem}.target-player small{color:#bdaec5;font-size:.65rem}
+
+/* Modales / résultats : cartes visibles en entier */
+.modal{position:fixed;inset:0;background:rgba(3,0,5,.80);display:grid;place-items:center;z-index:60;padding:10px;backdrop-filter:blur(8px)}.modal-card{width:min(1050px,97vw);max-height:94dvh;background:#16091f;border:2px solid rgba(255,217,0,.35);border-radius:20px;padding:15px 18px;box-shadow:0 30px 80px rgba(0,0,0,.55);position:relative}.modal-card h2{margin:0 0 8px;color:var(--gold)}.modal-close{position:absolute;right:10px;top:5px;background:transparent;border:0;color:#fff;font-size:29px}.rules-card{overflow:auto}.rules-columns{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.rules-columns h3{color:#ff8bc9;margin:7px 0 4px}.rules-columns p{color:#e8dcec;line-height:1.35;font-size:.82rem;margin:5px 0}.result-card{text-align:center;overflow:hidden;display:flex;flex-direction:column}.result-card #resultBody{min-height:0}.result-note{color:#dfd1e7;line-height:1.25;font-size:.82rem;margin:3px 0 7px}.result-hands{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:6px 0 9px}.result-player{min-width:0;padding:7px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.04);font-size:.74rem}.result-player.winner{border-color:var(--gold);box-shadow:0 0 18px rgba(255,217,0,.10)}.result-player-head{display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:4px}.result-mini-hand{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px;width:min(100%,270px);margin:4px auto}.result-mini-hand img{display:block;width:100%;height:auto;aspect-ratio:416/603;object-fit:contain;background:#fff;border-radius:4px;min-width:0}.delta.plus{color:#72ffb0}.delta.minus{color:#ff7699}.delta{font-weight:1000}
+.toast{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:90;background:#0f0614;border:1px solid var(--gold);color:#fff;padding:9px 14px;border-radius:11px;box-shadow:0 12px 30px rgba(0,0,0,.4);font-weight:900;font-size:.82rem}
+
+/* Effets */
+.event-burst{position:fixed;left:50%;top:38%;z-index:85;display:flex;align-items:center;gap:12px;max-width:min(620px,90vw);padding:12px 17px;border-radius:18px;border:2px solid rgba(255,217,0,.68);background:rgba(17,4,23,.96);box-shadow:0 22px 70px rgba(0,0,0,.48),0 0 45px rgba(255,217,0,.14);transform:translate(-50%,-50%) scale(.72) rotate(-2deg);opacity:0;pointer-events:none}.event-burst.show{animation:eventPop 1.85s cubic-bezier(.19,.85,.2,1) both}.event-burst img{width:64px;aspect-ratio:416/603;object-fit:contain;background:#fff;border-radius:7px;box-shadow:0 7px 18px rgba(0,0,0,.38)}.event-burst strong{display:block;font-size:clamp(1.25rem,2.5vw,2rem);line-height:1;color:var(--gold);text-shadow:0 3px 0 #4e001f}.event-burst span{display:block;margin-top:5px;color:#fff;font-weight:800;font-size:.82rem}.event-burst.pok{border-color:#ff34a2;background:linear-gradient(135deg,rgba(44,0,65,.98),rgba(109,0,76,.96))}.event-burst.pok strong{color:#fff200;font-size:clamp(1.7rem,3.5vw,2.8rem)}.event-burst.block{border-color:#ff588f}.event-burst.bomb{border-color:#ff9d24}.event-burst.steal{border-color:#6ee5ff}
+.fx-layer{position:fixed;inset:0;pointer-events:none;z-index:80;overflow:hidden}.flying-card{position:absolute;left:50%;top:45%;height:132px;aspect-ratio:416/603;margin:-66px 0 0 -46px;filter:drop-shadow(0 14px 18px rgba(0,0,0,.45));opacity:0}.flying-card img{width:100%;height:100%;object-fit:contain;background:#fff;border-radius:8px}.flying-card.draw{animation:flyDraw 1s cubic-bezier(.16,.8,.2,1)}.flying-card.discard{animation:flyDiscard 1s cubic-bezier(.28,.66,.25,1)}.flying-card.bonus{animation:flyBonus 1.05s cubic-bezier(.16,.8,.2,1)}.particle{position:absolute;left:50%;top:44%;font-size:18px;color:var(--gold);text-shadow:0 2px 5px #000;animation:particleBurst var(--d,1000ms) ease-out forwards}.particle.block{color:#ff6b9d}.particle.steal{color:#84eaff}.particle.bomb{color:#ffb52d}.particle.pok{color:#fff200}
+.screen-shake #app{animation:screenShake .48s ease-out}
+
+@keyframes opponentPulse{0%,100%{opacity:.32;transform:scale(.993)}50%{opacity:1;transform:scale(1)}}
+@keyframes dotBounce{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-3px);opacity:1}}
+@keyframes miniBreath{from{transform:translateY(0) rotate(calc((var(--mini,0) - 2) * 2deg))}to{transform:translateY(-2px) rotate(calc((var(--mini,0) - 2) * 2deg))}}
+@keyframes chooserIn{from{opacity:0;transform:translate(-50%,-46%) scale(.975)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@keyframes eventPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.62) rotate(-5deg)}10%{opacity:1;transform:translate(-50%,-50%) scale(1.09) rotate(1deg)}20%,72%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}86%{opacity:1;transform:translate(-50%,-54%) scale(.98)}100%{opacity:0;transform:translate(-50%,-62%) scale(.87)}}
+@keyframes flyDraw{0%{opacity:0;transform:translate(0,-70px) scale(.42) rotate(-16deg)}14%{opacity:1}68%{opacity:1;transform:translate(0,80px) scale(1) rotate(4deg)}100%{opacity:0;transform:translate(0,175px) scale(.92) rotate(8deg)}}
+@keyframes flyDiscard{0%{opacity:0;transform:translate(0,135px) scale(.92) rotate(-5deg)}12%{opacity:1}68%{opacity:1;transform:translate(150px,-15px) scale(.82) rotate(12deg)}100%{opacity:0;transform:translate(245px,-60px) scale(.5) rotate(22deg)}}
+@keyframes flyBonus{0%{opacity:0;transform:scale(.32) rotate(-20deg)}14%{opacity:1}50%{opacity:1;transform:scale(1.30) rotate(4deg)}78%{opacity:1;transform:scale(1.05) rotate(-2deg)}100%{opacity:0;transform:scale(.92) rotate(12deg)}}
+@keyframes particleBurst{0%{opacity:0;transform:translate(0,0) scale(.3) rotate(0)}12%{opacity:1}100%{opacity:0;transform:translate(var(--x),var(--y)) scale(1.2) rotate(var(--r))}}
+@keyframes screenShake{0%,100%{transform:none}18%{transform:translate(-6px,3px) rotate(-.3deg)}35%{transform:translate(5px,-3px) rotate(.25deg)}52%{transform:translate(-4px,2px)}70%{transform:translate(3px,-1px)}}
+@keyframes scoreGlow{from{box-shadow:0 0 0 1px rgba(255,217,0,.16) inset,0 0 7px rgba(255,217,0,.04)}to{box-shadow:0 0 0 1px rgba(255,217,0,.30) inset,0 0 17px rgba(255,217,0,.13)}}
+@keyframes pileReady{from{box-shadow:0 7px 16px rgba(0,0,0,.28)}to{box-shadow:0 10px 22px rgba(0,0,0,.36),0 0 13px rgba(255,217,0,.15)}}
+@keyframes pokButton{from{box-shadow:0 7px 18px rgba(255,160,0,.18)}to{box-shadow:0 9px 24px rgba(255,217,0,.34);transform:translateY(-1px)}}
+
+@media (max-height:760px){
+  .topbar{height:54px}.logo{height:42px}main{height:calc(100dvh - 54px);padding:5px 9px}
+  #gameScreen.active{grid-template-rows:auto auto minmax(78px,14vh) minmax(175px,31vh) minmax(45px,7vh);gap:4px}
+  .opponent{padding:4px 6px}.opponent-avatar{width:30px;height:30px;flex-basis:30px;font-size:19px}.mini-hand{height:42px}.mini-card{width:30px;height:42px}
+  .pile{width:58px}.panel-mini{padding:7px 10px}.human-zone{padding:5px 8px}.human-avatar{width:36px;height:36px;flex-basis:36px;font-size:23px}.human-hand{height:calc(100% - 69px);min-height:104px}.hand-card{height:min(19.5vh,145px)}
+  .actions button{padding:7px 11px}.log-panel{padding:4px 8px}.start-card{padding:10px 18px}.start-logo{max-height:86px}.avatar-picker{gap:3px}.avatar-option{padding:3px 1px;font-size:.60rem}.picker-avatar{width:27px;height:27px;font-size:18px}
+}
+@media (max-width:900px){
+  .top-meta>span{display:none}.avatar-picker{grid-template-columns:repeat(6,minmax(0,1fr))}.opponents{grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}.scoreboard{grid-template-columns:repeat(auto-fit,minmax(105px,1fr))}.result-hands{grid-template-columns:repeat(2,minmax(0,1fr))}.rules-columns{grid-template-columns:1fr}.rules-card{overflow:auto}.table-zone{grid-template-columns:70px minmax(150px,1fr) 70px;gap:7px}.hand-card{height:min(18.5vh,135px);margin-left:-10px}
+}
+@media (max-width:620px){
+  .topbar{padding:5px 8px}.logo{max-width:130px}.ghost-btn{padding:6px 8px;font-size:.72rem}.avatar-picker{grid-template-columns:repeat(6,minmax(0,1fr))}.avatar-option>span:last-child{display:none}.setup-grid{grid-template-columns:1fr 1fr}.opponents{grid-template-columns:repeat(2,minmax(0,1fr));overflow:hidden}.scoreboard{grid-template-columns:repeat(3,minmax(0,1fr))}.human-hand{justify-content:flex-start;padding-left:20px}.hand-card{height:min(17vh,122px);margin-left:-15px}.result-hands{grid-template-columns:repeat(2,minmax(0,1fr))}.result-mini-hand{gap:1px}.result-player{padding:5px}.target-player{min-width:120px}
+}
+
+/* ===== V0.4 : cartes sans liserés, actions plus lisibles, audio ===== */
+.audio-options{display:flex;gap:5px;align-items:center}.sound-option{padding:6px 9px;font-size:.74rem}
+
+/* Aucune bordure blanche autour des cartes : l'image remplit son support. */
+.hand-card{background:transparent;border:0;overflow:hidden}
+.hand-card img{object-fit:cover;background:transparent;border-radius:8px}
+.mini-card{width:32px;height:48px;object-fit:cover;background:transparent;border:0;border-radius:5px}
+.pile{border:0;background:transparent;box-shadow:0 7px 16px rgba(0,0,0,.32);overflow:visible}
+.pile img{object-fit:cover;background:transparent;border-radius:8px}
+.result-mini-hand img{object-fit:cover;background:transparent;border:0;border-radius:4px}
+.event-burst img,.flying-card img{object-fit:cover;background:transparent;border:0}
+
+/* Mise en évidence claire de QUI agit et QUI est ciblé. */
+.score-chip.event-actor,.opponent.event-actor{border-color:#6ee5ff!important;box-shadow:0 0 0 2px rgba(110,229,255,.2) inset,0 0 22px rgba(110,229,255,.22)!important}
+.score-chip.event-target,.opponent.event-target{border-color:#ff588f!important;box-shadow:0 0 0 2px rgba(255,88,143,.24) inset,0 0 26px rgba(255,88,143,.28)!important;animation:targetPulse 1s ease-in-out infinite alternate}
+.event-burst.directed{min-width:min(650px,92vw);justify-content:flex-start;padding:14px 18px;gap:14px}
+.event-card-art{flex:0 0 auto}.event-card-art img{width:68px;aspect-ratio:416/603;border-radius:7px;display:block;box-shadow:0 8px 22px rgba(0,0,0,.42)}
+.event-copy{min-width:0;flex:1}.event-copy>strong{margin-bottom:8px}
+.event-route{position:relative;display:flex;align-items:center;justify-content:center;gap:10px;min-height:50px;padding:4px 0}
+.event-person{display:flex!important;align-items:center;gap:6px;margin:0!important;padding:5px 8px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);font-size:.9rem!important}
+.event-person.target{border-color:rgba(255,88,143,.65);background:rgba(255,88,143,.10)}
+.event-person b{white-space:nowrap}.event-arrow{font-size:1.55rem!important;color:var(--gold)!important;margin:0!important;animation:arrowPulse .7s ease-in-out infinite alternate}
+.event-detail{margin-top:5px!important;text-align:center;font-size:.78rem!important;color:#f1e5f6!important}
+.event-avatar{width:30px;height:30px;flex-basis:30px;font-size:18px}
+.raccoon-paw{position:absolute;left:36%;top:-8px;font-size:23px;display:flex!important;align-items:center;gap:0;margin:0!important;animation:raccoonSteal 2.2s cubic-bezier(.2,.75,.2,1) both;filter:drop-shadow(0 4px 5px rgba(0,0,0,.45));z-index:4}.raccoon-paw i{font-style:normal;font-size:22px;margin-left:-5px}
+
+/* Le joueur choisit réellement une carte cachée pour Voleur. */
+.steal-card-row{display:flex;justify-content:center;align-items:flex-end;gap:0;margin:10px auto 4px;min-height:118px}.steal-card{position:relative;width:72px;aspect-ratio:708/1063;border:0;padding:0;background:transparent;margin-left:-10px;transition:.2s ease;filter:drop-shadow(0 8px 12px rgba(0,0,0,.38))}.steal-card:first-child{margin-left:0}.steal-card img{width:100%;height:100%;display:block;object-fit:cover;border-radius:7px}.steal-card span{position:absolute;right:3px;bottom:3px;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:#110718;color:var(--gold);font-weight:1000;font-size:.65rem;border:1px solid var(--gold)}.steal-card:hover{transform:translateY(-12px) rotate(-2deg) scale(1.05);z-index:5}
+.raccoon-helper{height:30px;display:flex;justify-content:center;align-items:center;gap:2px;font-size:23px}.raccoon-helper b{font-size:20px;animation:pawWave .8s ease-in-out infinite alternate}
+
+/* Dernier tour : nettoyage des Bonus volontairement très visible. */
+.final-cleanup-hint{color:#fff2a4}.hand-card.inactive{opacity:.88}
+
+/* Animations un peu plus lentes pour laisser le temps de comprendre. */
+.event-burst.show{animation:eventPopSlow 2.55s cubic-bezier(.19,.85,.2,1) both}
+.flying-card.draw{animation-duration:1.22s}.flying-card.discard{animation-duration:1.22s}.flying-card.bonus{animation-duration:1.30s}
+
+@keyframes targetPulse{from{transform:scale(1);filter:brightness(1)}to{transform:scale(1.015);filter:brightness(1.12)}}
+@keyframes arrowPulse{from{transform:translateX(-2px) scale(.95);opacity:.7}to{transform:translateX(3px) scale(1.08);opacity:1}}
+@keyframes raccoonSteal{0%{transform:translate(-120px,28px) rotate(-18deg) scale(.8);opacity:0}18%{opacity:1}48%{transform:translate(0,0) rotate(6deg) scale(1.06)}72%{transform:translate(75px,2px) rotate(-5deg) scale(1)}100%{transform:translate(130px,-18px) rotate(8deg) scale(.9);opacity:0}}
+@keyframes pawWave{from{transform:rotate(-14deg) translateX(-2px)}to{transform:rotate(14deg) translateX(2px)}}
+@keyframes eventPopSlow{0%{opacity:0;transform:translate(-50%,-50%) scale(.62) rotate(-4deg)}8%{opacity:1;transform:translate(-50%,-50%) scale(1.07) rotate(1deg)}17%,78%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}90%{opacity:1;transform:translate(-50%,-53%) scale(.98)}100%{opacity:0;transform:translate(-50%,-59%) scale(.90)}}
+
+@media (max-width:900px){.audio-options{gap:3px}.sound-option{font-size:.68rem;padding:5px 7px}.event-burst.directed{min-width:min(590px,94vw)}.steal-card{width:64px}}
+@media (max-width:620px){.audio-options .sound-option{font-size:0;width:34px;height:31px;padding:0}.audio-options #musicBtn:before{content:'♫';font-size:15px}.audio-options #fxBtn:before{content:'🔔';font-size:14px}.event-card-art img{width:55px}.event-route{gap:5px}.event-person{padding:4px 6px;font-size:.74rem!important}.event-avatar{width:26px;height:26px;flex-basis:26px;font-size:16px}.steal-card{width:58px}}
+.event-burst .event-avatar{display:grid!important;margin:0!important;color:#fff!important}
+.event-burst .event-avatar>span{display:block!important;margin:0!important;color:inherit!important;font-size:inherit!important;line-height:1!important}
+.event-burst .event-person b{font-size:.88rem;line-height:1.05}
+
+/* ===== V0.5 : table en losange, livret feuilletable, prénoms modifiables et animations de table ===== */
+.v05-start-card{width:min(940px,96vw);padding:10px 18px 11px;max-height:calc(100dvh - 72px)}
+.v05-start-card .start-logo{max-height:86px}.v05-start-card .tagline{margin:1px 0 6px}
+.v05-setup-grid{margin:6px 0;gap:9px}.v05-setup-grid select{padding:7px 9px;margin-top:3px}
+.name-setup-wrap{padding:6px 9px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);border-radius:12px;margin:6px 0}
+.name-title-row{display:flex;justify-content:space-between;align-items:center;margin:0 0 5px}.tiny-btn{border:1px solid rgba(255,217,0,.35);background:rgba(255,217,0,.08);color:#fff3a0;border-radius:9px;padding:5px 8px;font-size:.68rem;font-weight:900}
+.name-setup{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}.name-field{display:flex;align-items:center;gap:5px;min-width:0}.name-field .name-number{width:20px;height:20px;display:grid;place-items:center;flex:0 0 20px;border-radius:50%;background:rgba(255,217,0,.12);border:1px solid rgba(255,217,0,.35);font-size:.62rem;font-weight:1000;color:#fff3a0}.name-field input{width:100%;min-width:0;border:1px solid rgba(255,255,255,.15);background:#16091f;color:#fff;border-radius:9px;padding:6px 8px;font-weight:800;font-size:.76rem;outline:none}.name-field input:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(255,217,0,.10)}.name-field.human input{border-color:rgba(255,217,0,.42)}
+.compact-avatar-setup{padding:5px 8px}.compact-avatar-setup .setup-title{margin-bottom:3px;font-size:.82rem}.compact-avatar-setup .avatar-picker{gap:3px}.compact-avatar-setup .avatar-option{padding:2px 1px;font-size:.56rem}.compact-avatar-setup .picker-avatar{width:25px;height:25px;font-size:16px}.compact-avatar-setup .avatar-choice-label{font-size:.68rem;margin-top:2px}
+
+#gameScreen.active.v05-game-layout{display:grid;grid-template-rows:minmax(0,1fr) 42px;gap:5px;overflow:hidden}
+.v05-game-layout>.scoreboard{display:none}
+.arena{position:relative;min-height:0;height:100%;overflow:hidden;border:1px solid rgba(255,255,255,.08);border-radius:26px;background:radial-gradient(ellipse at center,rgba(82,23,91,.34),rgba(16,4,22,.30) 62%,rgba(5,1,8,.48));box-shadow:inset 0 0 80px rgba(0,0,0,.32)}
+.table-felt{position:absolute;left:50%;top:48%;width:min(66vw,900px);height:min(56vh,500px);transform:translate(-50%,-50%);border-radius:48%;background:radial-gradient(ellipse at center,rgba(92,28,107,.26),rgba(47,8,60,.30) 58%,rgba(9,2,13,.06) 72%);border:1px solid rgba(255,217,0,.10);box-shadow:inset 0 0 48px rgba(0,0,0,.25),0 0 55px rgba(239,22,136,.05);pointer-events:none}
+.v05-game-layout .opponents{position:absolute;inset:0;display:block;pointer-events:none;z-index:4}
+.v05-game-layout .opponent{position:absolute;width:clamp(160px,17vw,230px);height:104px;pointer-events:auto;padding:6px 8px;transition:transform .28s ease,border-color .28s ease,box-shadow .28s ease,filter .28s ease;overflow:visible}
+.v05-game-layout .opponent.seat-left{left:2.2%;top:46%;transform:translateY(-50%)}
+.v05-game-layout .opponent.seat-right{right:2.2%;top:46%;transform:translateY(-50%)}
+.v05-game-layout .opponent.seat-top{left:50%;top:1.5%;transform:translateX(-50%)}
+.v05-game-layout .opponent.seat-top-left{left:17%;top:5%;transform:translateX(-50%)}
+.v05-game-layout .opponent.seat-top-right{right:17%;top:5%;transform:translateX(50%)}
+.v05-game-layout .opponent.seat-mid-left{left:2%;top:33%;transform:translateY(-50%)}
+.v05-game-layout .opponent.seat-mid-right{right:2%;top:33%;transform:translateY(-50%)}
+.v05-game-layout .opponent.seat-upper-left{left:8%;top:8%}.v05-game-layout .opponent.seat-upper-right{right:8%;top:8%}
+.v05-game-layout .opponent.active.seat-left,.v05-game-layout .opponent.active.seat-right{transform:translateY(-50%) scale(1.02)}
+.v05-game-layout .opponent.active.seat-top{transform:translateX(-50%) scale(1.02)}
+.v05-game-layout .opponent.active.seat-top-left{transform:translateX(-50%) scale(1.02)}
+.v05-game-layout .opponent.active.seat-top-right{transform:translateX(50%) scale(1.02)}
+.v05-game-layout .mini-hand{height:47px}.v05-game-layout .mini-card{width:32px;height:47px}
+.v05-game-layout .opponent-foot{font-size:.61rem}
+
+.v05-table-zone{position:absolute;z-index:5;left:50%;top:45%;transform:translate(-50%,-50%);width:min(470px,42vw);grid-template-columns:76px minmax(170px,1fr) 76px;gap:10px;margin:0}.v05-table-zone .pile{width:65px}.v05-table-zone .panel-mini{padding:9px 11px;background:rgba(13,4,18,.80);box-shadow:0 10px 28px rgba(0,0,0,.25)}
+.seat-human{position:absolute!important;z-index:7;left:50%;bottom:1.2%;transform:translateX(-50%);width:min(700px,58vw);height:min(230px,31vh);padding:6px 10px!important;overflow:visible!important;border-color:rgba(255,217,0,.20)}
+.seat-human.event-target{animation:humanTargetPulse 1s ease-in-out infinite alternate}.seat-human.event-actor{box-shadow:0 0 0 2px rgba(110,229,255,.20) inset,0 0 26px rgba(110,229,255,.20)}
+.seat-human .human-heading{min-height:34px}.seat-human .human-hand{height:calc(100% - 72px);min-height:105px;padding:3px 2px 0}.seat-human .hand-card{height:min(18.5vh,142px);margin-left:-8px}.seat-human .actions{min-height:31px;padding-top:1px}.seat-human .actions button{padding:7px 12px;font-size:.78rem}
+.v05-log-panel{min-height:0;padding:4px 10px;display:grid;grid-template-columns:120px 1fr;align-items:center;overflow:hidden}.v05-log-panel .eyebrow{margin:0}.v05-log-panel .game-log{display:flex;align-items:center;overflow:hidden;min-width:0}.v05-log-panel .log-line{display:none}.v05-log-panel .log-line:first-child{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.74rem;color:#e7dce9}
+
+/* Livret officiel feuilletable */
+.rules-book-card{width:min(1180px,98vw);height:min(94dvh,900px);padding:10px 14px 12px;overflow:hidden;background:radial-gradient(circle at 50% 20%,#2f123b,#130819 72%)}
+.book-header{display:flex;align-items:center;justify-content:space-between;padding:0 42px 4px 4px}.book-header h2{margin:1px 0 0}.book-counter{font-weight:1000;color:#fff3a0;border:1px solid rgba(255,217,0,.25);background:rgba(255,217,0,.07);border-radius:999px;padding:6px 10px;font-size:.76rem}.book-stage{height:calc(100% - 72px);display:grid;grid-template-columns:54px minmax(0,1fr) 54px;align-items:center;gap:8px}.book-nav{height:84px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:#fff;border-radius:14px;font-size:3rem;line-height:1;transition:.16s ease}.book-nav:hover:not(:disabled){background:rgba(255,217,0,.10);border-color:rgba(255,217,0,.55);transform:scale(1.04)}.book-nav:disabled{opacity:.18;cursor:default}.book-page-shell{position:relative;height:100%;display:grid;place-items:center;perspective:1800px;overflow:visible}.book-page-shell img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border-radius:3px;box-shadow:0 22px 55px rgba(0,0,0,.48),0 0 0 1px rgba(255,255,255,.08);transform-origin:left center;background:#fff;will-change:transform,opacity}.book-page-shell.flip-next img{animation:bookFlipNext .52s cubic-bezier(.4,.05,.2,1)}.book-page-shell.flip-prev img{transform-origin:right center;animation:bookFlipPrev .52s cubic-bezier(.4,.05,.2,1)}.book-spine{position:absolute;left:50%;top:3%;bottom:3%;width:1px;background:linear-gradient(transparent,rgba(0,0,0,.35),transparent);opacity:.25;pointer-events:none}.book-help{text-align:center;color:#bdaec5;font-size:.68rem;margin-top:2px}
+@keyframes bookFlipNext{0%{transform:rotateY(0) scale(1);opacity:1}45%{transform:rotateY(-68deg) scale(.985);opacity:.55}51%{transform:rotateY(58deg) scale(.985);opacity:.42}100%{transform:rotateY(0) scale(1);opacity:1}}
+@keyframes bookFlipPrev{0%{transform:rotateY(0) scale(1);opacity:1}45%{transform:rotateY(68deg) scale(.985);opacity:.55}51%{transform:rotateY(-58deg) scale(.985);opacity:.42}100%{transform:rotateY(0) scale(1);opacity:1}}
+
+/* Fin de manche : mêmes places autour de la table */
+.v05-result-card{width:min(1180px,98vw);height:min(94dvh,850px);padding:10px 14px 12px}.v05-result-card #resultBody{flex:1;min-height:0}.result-note{margin:2px 0 5px}.result-table{position:relative;height:calc(100% - 34px);min-height:470px;border:1px solid rgba(255,255,255,.07);border-radius:25px;background:radial-gradient(ellipse at center,rgba(76,17,88,.24),rgba(10,2,14,.18) 68%);overflow:hidden}.result-table .result-player{position:absolute;width:clamp(210px,25vw,320px);padding:7px;background:rgba(15,5,20,.90);z-index:2}.result-table .result-player.seat-human-result{left:50%;bottom:2%;transform:translateX(-50%)}.result-table .result-player.seat-left{left:1.5%;top:50%;transform:translateY(-50%)}.result-table .result-player.seat-right{right:1.5%;top:50%;transform:translateY(-50%)}.result-table .result-player.seat-top{left:50%;top:2%;transform:translateX(-50%)}.result-table .result-player.seat-top-left{left:16%;top:3%;transform:translateX(-50%)}.result-table .result-player.seat-top-right{right:16%;top:3%;transform:translateX(50%)}.result-table .result-player.seat-mid-left{left:1%;top:34%;transform:translateY(-50%)}.result-table .result-player.seat-mid-right{right:1%;top:34%;transform:translateY(-50%)}.result-table .result-mini-hand{width:min(100%,275px);gap:2px;margin:3px auto}.result-table .result-mini-hand img{width:100%;height:auto;aspect-ratio:416/603;object-fit:cover;background:transparent;border:0;border-radius:4px}.result-combo{font-weight:1000;color:#fff2a4;font-size:.8rem}.result-center-summary{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(300px,30vw);text-align:center;padding:10px 12px;border-radius:15px;background:rgba(9,2,13,.83);border:1px solid rgba(255,217,0,.22);font-size:.74rem;color:#e8dcec;z-index:1}
+
+/* Animations directement entre les sièges */
+.action-sprite{position:fixed;z-index:110;left:0;top:0;pointer-events:none;display:grid;place-items:center;filter:drop-shadow(0 12px 12px rgba(0,0,0,.48));will-change:transform,opacity}.action-sprite.block{font-size:62px}.action-sprite.steal{font-size:54px}.action-sprite.bomb{font-size:58px}.action-sprite .sprite-label{position:absolute;top:-11px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:1000;white-space:nowrap;padding:3px 7px;border-radius:999px;background:#100516;border:1px solid rgba(255,255,255,.20);color:#fff}
+.table-action-card{position:fixed;z-index:109;width:58px;aspect-ratio:708/1063;pointer-events:none;filter:drop-shadow(0 10px 11px rgba(0,0,0,.45));will-change:transform,opacity}.table-action-card img{display:block;width:100%;height:100%;object-fit:cover;border-radius:6px}.table-hand-sprite{position:fixed;z-index:111;font-size:32px;pointer-events:none;filter:drop-shadow(0 5px 6px rgba(0,0,0,.45));will-change:transform,opacity}.target-impact{position:fixed;z-index:108;pointer-events:none;font-weight:1000;color:#fff;padding:6px 11px;border-radius:999px;background:rgba(8,2,12,.90);border:2px solid var(--gold);box-shadow:0 0 30px rgba(255,217,0,.28);animation:impactPop 1.45s ease both}.target-impact.block{border-color:#ff4a88}.target-impact.steal{border-color:#6ee5ff}.target-impact.bomb{border-color:#ff9d24}.seat-player.impact-block,.opponent.impact-block{animation:seatBlockHit .72s ease}.seat-player.impact-bomb,.opponent.impact-bomb{animation:seatBombHit .8s ease}.seat-player.impact-steal,.opponent.impact-steal{animation:seatStealHit .8s ease}
+@keyframes impactPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}18%,70%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-80%) scale(.9)}}
+@keyframes seatBlockHit{0%,100%{filter:none}24%,62%{filter:brightness(1.35) saturate(.6);box-shadow:0 0 0 4px rgba(255,74,136,.32),0 0 34px rgba(255,74,136,.35)}}
+@keyframes seatBombHit{0%,100%{transform:var(--seat-base-transform,none)}22%{filter:brightness(1.7);box-shadow:0 0 40px rgba(255,157,36,.45)}34%{filter:brightness(.8)}48%{filter:brightness(1.5)}}
+@keyframes seatStealHit{0%,100%{filter:none}30%,65%{filter:brightness(1.25);box-shadow:0 0 30px rgba(110,229,255,.28)}}
+@keyframes humanTargetPulse{from{box-shadow:0 0 0 2px rgba(255,88,143,.22) inset,0 0 20px rgba(255,88,143,.18)}to{box-shadow:0 0 0 3px rgba(255,88,143,.35) inset,0 0 38px rgba(255,88,143,.32)}}
+
+/* Voleur : éventail plus généreux */
+.steal-card-row{min-height:145px;padding-top:8px}.steal-card{width:86px;margin-left:-15px;transform:rotate(calc((var(--steal-i,2) - 2) * 4deg));transform-origin:50% 120%}.steal-card:hover{transform:translateY(-15px) rotate(calc((var(--steal-i,2) - 2) * 4deg)) scale(1.06)}
+
+@media (max-height:760px){
+  #gameScreen.active.v05-game-layout{grid-template-rows:minmax(0,1fr) 36px}.seat-human{height:min(205px,30vh)}.seat-human .hand-card{height:min(17vh,128px)}.v05-game-layout .opponent{height:94px}.v05-table-zone{top:44%}.v05-log-panel{grid-template-columns:100px 1fr}.book-stage{height:calc(100% - 66px)}
+}
+@media (max-width:980px){
+  .name-setup{grid-template-columns:repeat(3,minmax(0,1fr))}.seat-human{width:min(720px,72vw)}.v05-table-zone{width:min(410px,48vw)}.v05-game-layout .opponent{width:175px}.result-table .result-player{width:235px}.result-center-summary{width:230px}.book-stage{grid-template-columns:45px minmax(0,1fr) 45px}
+}
+@media (max-width:720px){
+  .name-setup{grid-template-columns:repeat(2,minmax(0,1fr))}.v05-game-layout .opponent{width:150px;height:88px}.seat-human{width:88vw;height:200px}.seat-human .hand-card{height:118px;margin-left:-14px}.v05-table-zone{width:330px;grid-template-columns:62px minmax(145px,1fr) 62px}.v05-table-zone .pile{width:55px}.v05-game-layout .opponent.seat-left{left:1%;top:42%}.v05-game-layout .opponent.seat-right{right:1%;top:42%}.v05-game-layout .opponent.seat-top{top:1%}.v05-log-panel{grid-template-columns:1fr}.v05-log-panel .eyebrow{display:none}.result-table .result-player{width:190px;padding:5px}.result-center-summary{display:none}.book-stage{grid-template-columns:38px minmax(0,1fr) 38px;gap:4px}.book-nav{height:70px;font-size:2.4rem}.rules-book-card{padding:8px}.book-header{padding-right:36px}
+}
+/* Correctifs de positionnement des sièges pendant les effets : aucune animation ne doit casser le losange. */
+.v05-game-layout .opponent.event-target{animation:seatTargetGlow 1s ease-in-out infinite alternate!important}
+.v05-game-layout .opponent.active.seat-mid-left,.v05-game-layout .opponent.active.seat-mid-right{transform:translateY(-50%) scale(1.02)}
+.v05-game-layout .opponent.active.seat-upper-left,.v05-game-layout .opponent.active.seat-upper-right{transform:scale(1.02)}
+@keyframes seatTargetGlow{from{filter:brightness(1);box-shadow:0 0 0 2px rgba(255,88,143,.18) inset,0 0 16px rgba(255,88,143,.18)}to{filter:brightness(1.12);box-shadow:0 0 0 3px rgba(255,88,143,.30) inset,0 0 30px rgba(255,88,143,.32)}}
+@keyframes seatBombHit{0%,100%{filter:brightness(1)}22%{filter:brightness(1.7);box-shadow:0 0 40px rgba(255,157,36,.45)}34%{filter:brightness(.8)}48%{filter:brightness(1.5)}}
+
+/* ========================================================================== */
+/* POK POK v0.6 — chrono, animations renforcées, livret plein écran, mobile   */
+/* ========================================================================== */
+
+/* Le nombre de cartes dans les piles n'est plus affiché : l'info importante est le chrono. */
+.pile-count{display:none!important}
+
+.turn-timer{margin:7px auto 0;width:max-content;min-width:64px;height:30px;padding:0 9px;display:flex;align-items:center;justify-content:center;gap:3px;border-radius:999px;border:1px solid rgba(255,217,0,.52);background:linear-gradient(180deg,rgba(255,217,0,.14),rgba(255,217,0,.05));box-shadow:0 0 20px rgba(255,217,0,.08);font-weight:1000;color:#fff6b5;font-variant-numeric:tabular-nums;transition:.2s ease}
+.turn-timer .timer-icon{font-size:.86rem}.turn-timer .timer-unit{font-size:.62rem;opacity:.78}.turn-timer.warning{border-color:#ff9f3c;color:#ffd3a0;animation:timerPulse .7s ease-in-out infinite alternate}.turn-timer.danger{border-color:#ff497f;color:#ffd8e4;background:rgba(239,22,136,.16);animation:timerDanger .38s ease-in-out infinite alternate}
+.badge.timer-badge{border-color:rgba(255,217,0,.45);color:#fff2a0;background:rgba(255,217,0,.09);font-variant-numeric:tabular-nums}.badge.timer-badge.warning{border-color:#ff9f3c;color:#ffd09a}.badge.timer-badge.danger{border-color:#ff497f;color:#ffd6e2;background:rgba(239,22,136,.15)}
+@keyframes timerPulse{from{transform:scale(1)}to{transform:scale(1.06);box-shadow:0 0 18px rgba(255,157,36,.22)}}
+@keyframes timerDanger{from{transform:scale(1)}to{transform:scale(1.08);box-shadow:0 0 24px rgba(255,73,127,.34)}}
+
+/* La barre d'action du bas reste lisible et ne se fait plus couper. */
+#gameScreen.active.v05-game-layout{grid-template-rows:minmax(0,1fr) 50px;gap:6px}
+.v05-log-panel{min-height:50px;padding:6px 11px;overflow:hidden;border-radius:14px}.v05-log-panel .game-log{height:100%;min-height:0}.v05-log-panel .log-line:first-child{font-size:.78rem;line-height:1.25}
+
+/* Livret : la page complète doit toujours tenir dans la fenêtre. */
+.rules-book-card{width:min(1220px,99vw);height:calc(100dvh - 18px);max-height:none;display:flex;flex-direction:column;padding:9px 12px 10px;overflow:hidden}
+.book-header{flex:0 0 auto;min-height:50px;padding:0 44px 5px 4px}.book-header h2{font-size:1.15rem}
+.book-stage{flex:1 1 auto;min-height:0;height:auto;display:grid;grid-template-columns:58px minmax(0,1fr) 58px;gap:9px;align-items:stretch;overflow:hidden}
+.book-page-shell{height:100%;min-height:0;width:100%;overflow:hidden;padding:2px;display:grid;place-items:center}
+.book-page-shell img{width:auto!important;height:auto!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center!important;border-radius:4px;user-select:none;-webkit-user-drag:none}
+.book-nav{align-self:center;height:96px;position:relative;z-index:3}.book-footer{flex:0 0 39px;display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding-top:5px}.book-footer-btn{border:1px solid rgba(255,217,0,.32);background:rgba(255,217,0,.07);color:#fff2a4;border-radius:11px;padding:7px 11px;font-weight:900;font-size:.72rem}.book-footer-btn:hover:not(:disabled){background:rgba(255,217,0,.14);border-color:var(--gold)}.book-footer-btn:disabled{opacity:.25;cursor:default}.book-help{margin:0;text-align:center;align-self:center}
+
+/* Cartes et piles sans cadre artificiel. */
+.pile,.hand-card,.mini-card,.table-action-card,.steal-card{border-color:transparent!important;background:transparent!important}
+.pile img,.hand-card img,.mini-card,.table-action-card img,.steal-card img{background:transparent!important;border:0!important;outline:0!important}
+.hand-card{box-shadow:0 7px 18px rgba(0,0,0,.38)}
+
+/* Plus de fun dans les animations d'action. */
+.action-sprite{font-family:Segoe UI Emoji,Apple Color Emoji,Noto Color Emoji,sans-serif}.action-sprite.block{font-size:76px}.action-sprite.steal{font-size:67px}.action-sprite.bomb{font-size:72px}.action-sprite.chance{font-size:66px}.action-sprite.pecheur{font-size:68px}.action-sprite .sprite-label{top:-20px;font-size:12px;padding:4px 9px;border-width:2px;box-shadow:0 8px 22px rgba(0,0,0,.32)}
+.fun-word{position:absolute;left:50%;bottom:-22px;transform:translateX(-50%);font-size:16px;font-weight:1000;white-space:nowrap;text-shadow:0 3px 8px rgba(0,0,0,.72);animation:funWord .55s ease-in-out infinite alternate}
+@keyframes funWord{from{transform:translateX(-50%) rotate(-4deg) scale(.96)}to{transform:translateX(-50%) rotate(4deg) scale(1.08)}}
+
+.table-hand-sprite{font-size:42px;filter:drop-shadow(0 7px 8px rgba(0,0,0,.55));transform-origin:center bottom}.table-hand-sprite.draw-hand:after,.table-hand-sprite.discard-hand:after{position:absolute;left:50%;top:34px;transform:translateX(-50%);white-space:nowrap;font-size:10px;font-weight:1000;padding:2px 6px;border-radius:999px;background:#100516;border:1px solid rgba(255,255,255,.22);color:#fff}.table-hand-sprite.draw-hand:after{content:'PIOCHE'}.table-hand-sprite.discard-hand:after{content:'DÉFAUSSE'}
+.table-action-card{width:64px;aspect-ratio:416/603;perspective:800px;transform-style:preserve-3d}.table-action-card img{width:100%;height:100%;object-fit:contain!important;border-radius:7px;backface-visibility:hidden;box-shadow:0 8px 18px rgba(0,0,0,.42)}
+
+.bonus-showcase{position:fixed;z-index:114;pointer-events:none;width:86px;aspect-ratio:416/603;filter:drop-shadow(0 12px 18px rgba(0,0,0,.50));transform-origin:center}.bonus-showcase img{width:100%;height:100%;object-fit:contain;border:0;border-radius:8px}.bonus-showcase:after{content:attr(data-label);position:absolute;left:50%;bottom:-25px;transform:translateX(-50%);font-size:12px;font-weight:1000;color:#fff3a0;background:rgba(13,4,18,.92);border:1px solid rgba(255,217,0,.42);border-radius:999px;padding:4px 9px;white-space:nowrap}
+
+.cartoon-poof{position:fixed;z-index:112;pointer-events:none;font-size:38px;animation:cartoonPoof 1.15s ease-out both}.cartoon-poof.big{font-size:58px}
+@keyframes cartoonPoof{0%{opacity:0;transform:translate(-50%,-50%) scale(.25) rotate(-20deg)}24%{opacity:1;transform:translate(-50%,-50%) scale(1.2) rotate(6deg)}68%{opacity:1;transform:translate(-50%,-65%) scale(1) rotate(-3deg)}100%{opacity:0;transform:translate(-50%,-115%) scale(.75) rotate(10deg)}}
+
+/* Résultat : cartes entières, jamais rognées. */
+.result-table .result-mini-hand img{object-fit:contain!important;background:transparent!important;border:0!important}.result-table .result-mini-hand{overflow:visible}
+
+/* ===== Téléphone / APK ===== */
+@media (max-width:700px){
+  html,body,#app{width:100%;height:100%;overflow:hidden;overscroll-behavior:none}
+  .topbar{height:48px;padding:4px 7px}.topbar .logo{height:37px;max-width:118px}.top-meta{gap:4px}.top-meta>#roundLabel{display:none}.ghost-btn{padding:5px 7px;border-radius:9px}.top-meta #rulesBtn{font-size:.67rem;padding:6px 8px}
+  main{height:calc(100dvh - 48px);padding:3px;max-width:none}
+  #gameScreen.active.v05-game-layout{grid-template-rows:minmax(0,1fr) 43px;gap:3px}
+  .arena{border-radius:16px}
+  .table-felt{top:44%;width:92vw;height:44vh;border-radius:44%}
+  .v05-game-layout .opponent{width:116px;height:77px;padding:4px 5px;border-radius:11px}
+  .v05-game-layout .opponent.seat-left{left:1px;top:37%}.v05-game-layout .opponent.seat-right{right:1px;top:37%}.v05-game-layout .opponent.seat-top{top:1px}.v05-game-layout .opponent.seat-top-left{left:27%;top:2px}.v05-game-layout .opponent.seat-top-right{right:27%;top:2px}.v05-game-layout .opponent.seat-mid-left{left:1px;top:31%}.v05-game-layout .opponent.seat-mid-right{right:1px;top:31%}.v05-game-layout .opponent.seat-upper-left{left:7%;top:2px}.v05-game-layout .opponent.seat-upper-right{right:7%;top:2px}
+  .opponent-avatar{width:26px;height:26px;flex-basis:26px;font-size:16px}.opponent-name{font-size:.67rem}.opponent-id small{display:none}.opponent-top{margin:0}.v05-game-layout .mini-hand{height:34px}.v05-game-layout .mini-card{width:24px;height:35px;margin-left:-9px}.v05-game-layout .opponent-foot{font-size:.52rem}.opponent .badge{font-size:.48rem;padding:2px 3px}
+  .v05-table-zone{top:43%;width:250px;grid-template-columns:50px 142px 50px;gap:4px}.v05-table-zone .pile{width:45px}.pile-label{font-size:.48rem;letter-spacing:.8px}.v05-table-zone .panel-mini{padding:5px 6px;border-radius:10px}.turn-title{font-size:.74rem}.turn-hint{font-size:.57rem;line-height:1.08;max-height:2.2em;overflow:hidden}.turn-timer{height:23px;min-width:51px;margin-top:4px;padding:0 6px;font-size:.75rem}
+  .seat-human{width:calc(100vw - 8px);height:188px;bottom:2px;padding:4px 5px!important;border-radius:13px}.seat-human .human-heading{min-height:30px}.human-avatar{width:32px;height:32px;flex-basis:32px;font-size:20px}.eyebrow{font-size:.49rem;letter-spacing:.8px}.hand-eval{font-size:.72rem}.human-badges .badge{font-size:.48rem;padding:2px 4px}.seat-human .human-hand{height:112px;min-height:105px;padding:1px 1px 0}.seat-human .hand-card{height:105px;margin-left:-18px;border-radius:7px}.seat-human .hand-card:first-child{margin-left:0}.seat-human .actions{min-height:30px;gap:4px;flex-wrap:nowrap}.seat-human .actions button{padding:6px 8px;font-size:.64rem;white-space:nowrap}.action-hint{font-size:.58rem;line-height:1.05}
+  .v05-log-panel{min-height:43px;padding:4px 7px;grid-template-columns:1fr;border-radius:10px}.v05-log-panel .eyebrow{display:none}.v05-log-panel .log-line:first-child{font-size:.62rem;line-height:1.13;white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  .target-chooser{top:47%;width:calc(100vw - 10px);max-height:72dvh;overflow:auto;padding:9px;border-radius:14px}.target-title{font-size:.84rem}.target-sub{font-size:.63rem}.target-player{min-width:104px;padding:5px 6px;grid-template-columns:32px 1fr}.target-player .big-avatar{width:32px;height:32px;flex-basis:32px;font-size:20px}.target-player strong{font-size:.68rem}.target-player small{font-size:.53rem}.steal-card-row{min-height:112px}.steal-card{width:63px;margin-left:-18px}.raccoon-helper{transform:scale(.8)}
+  .event-burst.directed,.event-burst{max-width:94vw;min-width:0;padding:8px 10px}.event-card-art img{width:48px}.event-person b{font-size:.7rem!important}.event-detail{font-size:.62rem}.event-arrow{font-size:1.1rem}.action-sprite.block{font-size:56px}.action-sprite.steal{font-size:50px}.action-sprite.bomb{font-size:54px}.table-hand-sprite{font-size:31px}.table-action-card{width:47px}.bonus-showcase{width:65px}
+  .rules-book-card{width:100vw;height:100dvh;border-radius:0;border:0;padding:max(5px,env(safe-area-inset-top)) 4px max(5px,env(safe-area-inset-bottom));background:#100516}.book-header{min-height:43px;padding:0 38px 3px 4px}.book-header .eyebrow{display:none}.book-header h2{font-size:.9rem}.book-counter{font-size:.62rem;padding:4px 7px}.modal-close{right:6px;top:2px;font-size:26px}.book-stage{grid-template-columns:31px minmax(0,1fr) 31px;gap:2px}.book-nav{height:72px;border-radius:9px;font-size:2.2rem;padding:0}.book-page-shell{padding:0}.book-footer{grid-template-columns:auto auto;height:42px;justify-content:space-between;gap:4px}.book-footer .book-help{display:none}.book-footer-btn{padding:6px 8px;font-size:.58rem}.book-page-shell img{max-height:100%!important;max-width:100%!important}
+  .v05-result-card{width:100vw;height:100dvh;border-radius:0;border:0;padding:7px}.v05-result-card h2{font-size:1rem}.result-note{font-size:.65rem;line-height:1.15}.result-table{min-height:0;height:calc(100% - 28px);border-radius:14px}.result-table .result-player{width:130px!important;padding:4px;font-size:.56rem}.result-player-head{gap:3px}.result-avatar{width:22px;height:22px;flex-basis:22px;font-size:14px}.result-table .result-mini-hand{width:122px!important;gap:0!important}.result-table .result-mini-hand img{width:23px!important;flex:0 0 23px}.result-combo{font-size:.58rem}.delta{font-size:.58rem}.result-table .result-player.seat-human-result{bottom:1%}.result-table .result-player.seat-left{left:.5%;top:48%}.result-table .result-player.seat-right{right:.5%;top:48%}.result-table .result-player.seat-top{top:1%}.result-center-summary{display:none}.v05-result-card .primary.big{padding:7px;font-size:.72rem}
+  .v05-start-card{width:calc(100vw - 8px);max-height:calc(100dvh - 56px);overflow:auto;padding:8px 9px}.v05-start-card .start-logo{max-height:64px}.tagline{font-size:.72rem}.name-setup{grid-template-columns:repeat(2,minmax(0,1fr))}.compact-avatar-setup .avatar-picker{grid-template-columns:repeat(6,minmax(0,1fr))}.small-note{font-size:.62rem}
+}
+
+@media (max-width:700px) and (max-height:650px){
+  .seat-human{height:160px}.seat-human .human-hand{height:91px;min-height:86px}.seat-human .hand-card{height:88px}.v05-game-layout .opponent{height:67px}.v05-table-zone{top:41%}.table-felt{top:43%;height:42vh}
+}
+@media (max-width:700px){.modal{padding:0}.rules-book-card,.v05-result-card{margin:0}}
+
+
+/* ========================================================================== */
+/* POK POK v0.7 — lisibilité des sièges, zoom du livret et bouton Quitter.   */
+/* ========================================================================== */
+
+/* Le texte sous les adversaires ("5 cartes" / "réfléchit...") ne doit plus
+   être mangé par le bord inférieur du siège. */
+.v05-game-layout .opponent{
+  height:112px;
+  padding-bottom:9px;
+}
+.v05-game-layout .opponent-foot{
+  position:relative;
+  z-index:5;
+  min-height:17px;
+  line-height:16px;
+  margin-top:5px;
+  padding:0 2px 2px;
+  overflow:visible;
+  color:#e3d6e8;
+  text-shadow:0 1px 4px rgba(0,0,0,.8);
+}
+.v05-game-layout .mini-hand{margin-bottom:1px}
+.thinking-dots{display:inline-flex;align-items:flex-end;min-height:15px}
+
+/* Bouton pour abandonner une partie et revenir à l'écran d'accueil. */
+.quit-btn{border-color:rgba(255,117,151,.38);background:rgba(255,67,113,.08)}
+.quit-btn:hover{background:rgba(255,67,113,.16);border-color:rgba(255,117,151,.72)}
+
+/* Livret : zone d'outils et zoom réellement scrollable. */
+.rules-book-card{display:flex;flex-direction:column}
+.book-header{flex:0 0 auto;gap:10px}
+.book-tools{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.book-zoom-controls{display:flex;align-items:center;gap:4px;padding:3px;border-radius:12px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.10)}
+.book-zoom-btn,.book-zoom-value{height:31px;border:1px solid rgba(255,217,0,.28);background:rgba(255,217,0,.07);color:#fff4b4;border-radius:8px;font-weight:1000}
+.book-zoom-btn{width:34px;font-size:1.15rem;line-height:1}.book-zoom-value{min-width:58px;padding:0 8px;font-size:.72rem;font-variant-numeric:tabular-nums}
+.book-zoom-btn:hover,.book-zoom-value:hover{background:rgba(255,217,0,.14);border-color:rgba(255,217,0,.62)}
+.book-stage{height:auto;flex:1;min-height:0}
+.book-page-shell{overflow:hidden;overscroll-behavior:contain;touch-action:pan-x pan-y}
+.book-page-shell.zoomed{overflow:auto;place-items:start center;cursor:grab;padding:8px}
+.book-page-shell.zoomed:active{cursor:grabbing}
+.book-zoom-layer{position:relative;display:grid;place-items:center;flex:0 0 auto;transform-origin:top center}
+.book-zoom-layer img{display:block;object-fit:contain!important;user-select:none;-webkit-user-drag:none}
+.book-zoom-layer:not(.zoom-ready){width:auto;height:auto;max-width:100%;max-height:100%}
+.book-zoom-layer:not(.zoom-ready) img{width:auto!important;height:auto!important;max-width:100%!important;max-height:100%!important}
+.book-zoom-layer.zoom-ready img{width:100%!important;height:100%!important;max-width:none!important;max-height:none!important}
+.book-page-shell:not(.zoomed) .book-zoom-layer{max-width:100%;max-height:100%}
+.book-page-shell.zoomed .book-spine{display:none}
+.book-footer{flex:0 0 39px}
+
+@media (max-height:760px) and (min-width:701px){
+  .v05-game-layout .opponent{height:106px;padding-bottom:7px}
+  .v05-game-layout .opponent-foot{margin-top:3px;line-height:15px;min-height:15px}
+}
+
+@media (max-width:700px){
+  /* Sur téléphone on garde les sièges compacts tout en réservant enfin la ligne
+     d'état sous les cartes. */
+  .v05-game-layout .opponent{height:84px;padding-bottom:7px}
+  .v05-game-layout .mini-hand{height:32px;margin-bottom:0}
+  .v05-game-layout .mini-card{height:33px}
+  .v05-game-layout .opponent-foot{font-size:.53rem;line-height:12px;min-height:13px;margin-top:3px;padding-bottom:1px}
+  .top-meta{gap:3px}.quit-btn{font-size:0;width:34px;height:31px;padding:0}.quit-btn:before{content:'↩';font-size:16px}
+  .book-header{padding-right:35px;align-items:center}.book-tools{gap:4px;flex-wrap:nowrap}.book-counter{white-space:nowrap}.book-zoom-controls{gap:2px;padding:2px}
+  .book-zoom-btn{width:30px;height:29px;font-size:1rem}.book-zoom-value{height:29px;min-width:48px;padding:0 5px;font-size:.60rem}
+  .book-page-shell.zoomed{padding:4px}
+  .book-footer{height:42px;flex-basis:42px}
+}
+
+@media (max-width:700px) and (max-height:650px){
+  .v05-game-layout .opponent{height:72px;padding-bottom:5px}
+  .v05-game-layout .mini-hand{height:27px}.v05-game-layout .mini-card{height:28px;width:21px}
+  .v05-game-layout .opponent-foot{font-size:.49rem;line-height:10px;min-height:10px;margin-top:2px}
+}
+
+
+/* ========================================================================== */
+/* POK POK v0.8 — chrono 30 s, réactions, confirmation intégrée et porte-piles. */
+/* ========================================================================== */
+
+/* Pioche / défausse : un vrai petit support de table, sans ajouter de bord
+   directement sur les images de cartes. */
+.v05-table-zone .pile-wrap{
+  position:relative;
+  padding:7px 6px 5px;
+  border-radius:14px;
+  background:linear-gradient(145deg,#754a27 0%,#3f2312 38%,#2a150b 58%,#6a3d20 100%);
+  border:1px solid rgba(255,215,153,.40);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 -4px 9px rgba(0,0,0,.32),0 8px 18px rgba(0,0,0,.30);
+}
+.v05-table-zone .pile-wrap:before{
+  content:"";position:absolute;inset:3px;border-radius:10px;pointer-events:none;
+  border:1px solid rgba(255,255,255,.10);box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)
+}
+.v05-table-zone .draw-wrap{transform:rotate(-1deg)}
+.v05-table-zone .discard-wrap{transform:rotate(1deg)}
+.v05-table-zone .pile-label{position:relative;z-index:2;color:#fff0ca;text-shadow:0 1px 3px #000;margin-top:5px}
+.v05-table-zone .pile{position:relative;z-index:2;filter:drop-shadow(0 4px 5px rgba(0,0,0,.28))}
+
+/* Réactions du joueur. */
+.reaction-wrap{position:relative}
+.reaction-toggle{border-color:rgba(120,214,255,.34);background:rgba(72,178,255,.07)}
+.reaction-toggle:hover{border-color:rgba(120,214,255,.72);background:rgba(72,178,255,.15)}
+.reaction-palette{
+  position:absolute;right:0;top:calc(100% + 8px);z-index:180;display:flex;gap:5px;padding:7px;
+  background:rgba(16,5,22,.97);border:1px solid rgba(255,217,0,.35);border-radius:14px;
+  box-shadow:0 14px 34px rgba(0,0,0,.48);backdrop-filter:blur(10px)
+}
+.reaction-palette.hidden{display:none}
+.reaction-emoji{width:38px;height:38px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(255,255,255,.06);font-size:22px;cursor:pointer;transition:.16s ease}
+.reaction-emoji:hover{transform:translateY(-4px) scale(1.10) rotate(-3deg);background:rgba(255,217,0,.12);border-color:rgba(255,217,0,.5)}
+.player-reaction-bubble{
+  position:fixed;z-index:150;pointer-events:none;transform:translate(-50%,-50%);
+  font-family:Segoe UI Emoji,Apple Color Emoji,Noto Color Emoji,sans-serif;
+  animation:reactionPop 1.75s cubic-bezier(.18,.8,.18,1) both
+}
+.player-reaction-bubble .reaction-face{display:block;font-size:64px;filter:drop-shadow(0 10px 10px rgba(0,0,0,.45))}
+.player-reaction-bubble .reaction-label{display:block;margin-top:-5px;text-align:center;font-size:11px;font-weight:1000;color:#fff8cf;background:#120619;border:1px solid rgba(255,217,0,.42);border-radius:999px;padding:3px 8px;white-space:nowrap;box-shadow:0 5px 13px rgba(0,0,0,.32)}
+@keyframes reactionPop{0%{opacity:0;transform:translate(-50%,-30%) scale(.25) rotate(-12deg)}18%{opacity:1;transform:translate(-50%,-55%) scale(1.2) rotate(5deg)}58%{opacity:1;transform:translate(-50%,-80%) scale(1) rotate(-3deg)}100%{opacity:0;transform:translate(-50%,-150%) scale(.75) rotate(8deg)}}
+.reaction-spark{position:fixed;z-index:149;pointer-events:none;font-size:18px;animation:reactionSpark 1.1s ease-out both}
+@keyframes reactionSpark{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}20%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--rx)),calc(-50% + var(--ry))) scale(.75) rotate(var(--rr))}}
+
+/* Confirmation de sortie 100 % intégrée au jeu. */
+.quit-confirm-card{width:min(430px,92vw);text-align:center;padding:24px 24px 21px;border-color:rgba(255,217,0,.33);box-shadow:0 25px 80px rgba(0,0,0,.58)}
+.quit-confirm-icon{font-size:52px;filter:drop-shadow(0 8px 8px rgba(0,0,0,.35));animation:quitCardWiggle 1.5s ease-in-out infinite alternate}
+.quit-confirm-card h2{margin:5px 0 7px;color:#fff3ad}.quit-confirm-card p{margin:0 auto 18px;max-width:330px;color:#d8cadf;line-height:1.35}
+.quit-confirm-actions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap}.quit-confirm-actions button{min-width:145px}
+.danger-action{background:linear-gradient(180deg,#ff467c,#d61454)!important;border-color:#ff7da4!important;color:#fff!important}
+@keyframes quitCardWiggle{from{transform:rotate(-4deg) translateY(0)}to{transform:rotate(4deg) translateY(-4px)}}
+
+@media (max-width:700px){
+  .v05-table-zone .pile-wrap{padding:5px 4px 4px;border-radius:10px}.v05-table-zone .pile-wrap:before{inset:2px;border-radius:8px}.v05-table-zone .pile-label{margin-top:3px}
+  .reaction-toggle{font-size:0;width:34px;height:31px;padding:0}.reaction-toggle:before{content:'😊';font-size:16px}
+  .reaction-palette{position:fixed;right:7px;top:48px;padding:6px;gap:4px}.reaction-emoji{width:34px;height:34px;font-size:20px}
+  .player-reaction-bubble .reaction-face{font-size:52px}.player-reaction-bubble .reaction-label{font-size:9px}
+  .quit-confirm-card{width:calc(100vw - 26px);border-radius:18px!important;padding:20px 14px}.quit-confirm-icon{font-size:44px}.quit-confirm-card h2{font-size:1.15rem}.quit-confirm-card p{font-size:.82rem}.quit-confirm-actions{flex-direction:column}.quit-confirm-actions button{width:100%;min-width:0}
+}
+
+
+/* ========================================================================== */
+/* POK POK v0.9 — réaction dans le siège, noms/labels plus nets, sièges 2–6. */
+/* ========================================================================== */
+
+/* Le prénom du joueur humain a le même poids visuel que ceux des adversaires. */
+.human-player-line{display:flex;align-items:baseline;gap:2px;line-height:1.05;white-space:nowrap}
+#humanNameLabel{font-size:.84rem;font-weight:1000;color:#fff;letter-spacing:.05px;text-shadow:0 1px 5px rgba(0,0,0,.65)}
+.human-main-label{font-size:.57rem;font-weight:1000;letter-spacing:1.1px;color:#bfaec8}
+
+/* Réagir vit maintenant dans le coin bas-droit de VOTRE siège. */
+.seat-human{padding-bottom:8px!important}
+.seat-reaction{position:absolute;right:9px;bottom:8px;z-index:35}
+.seat-reaction-toggle{display:flex;align-items:center;justify-content:center;gap:3px;min-width:76px;height:30px;padding:0 8px;border-radius:999px;border:1px solid rgba(120,214,255,.45);background:linear-gradient(180deg,rgba(72,178,255,.18),rgba(72,178,255,.07));color:#fff;font-weight:1000;font-size:.70rem;box-shadow:0 5px 14px rgba(0,0,0,.25);cursor:pointer;transition:.16s ease}
+.seat-reaction-toggle:hover{transform:translateY(-2px) scale(1.03);border-color:rgba(120,214,255,.85);background:rgba(72,178,255,.20)}
+.seat-reaction .reaction-palette{top:auto;right:0;bottom:calc(100% + 7px);transform-origin:bottom right}
+.seat-human .actions{padding-right:88px}
+
+/* Titres des piles plus propres et plus faciles à lire. */
+.v05-table-zone .pile-label{display:flex;flex-direction:column;align-items:center;gap:1px;margin-top:5px;line-height:1;text-align:center;letter-spacing:0;text-shadow:0 1px 4px #000}
+.pile-label-main{display:block;font-size:.67rem;font-weight:1000;letter-spacing:1.35px;color:#fff4d2}
+.pile-label-sub{display:block;font-size:.46rem;font-weight:800;letter-spacing:.15px;color:#d6c3ad;text-transform:none}
+.v05-table-zone .draw-wrap .pile-label-main:before{content:'↥ ';color:#ffd900}
+.v05-table-zone .discard-wrap .pile-label-main:before{content:'↧ ';color:#ffb87c}
+
+/* Disposition robuste selon le nombre de joueurs : chaque siège garde de l'air. */
+.arena[data-player-count="2"] .opponent{width:clamp(175px,18vw,225px)}
+.arena[data-player-count="2"] .opponent.seat-top{top:4%}
+
+.arena[data-player-count="3"] .opponent{width:clamp(170px,17vw,215px)}
+.arena[data-player-count="3"] .opponent.seat-left{left:3%;top:31%}
+.arena[data-player-count="3"] .opponent.seat-right{right:3%;top:31%}
+
+.arena[data-player-count="4"] .opponent{width:clamp(165px,16.5vw,215px)}
+.arena[data-player-count="4"] .opponent.seat-left{left:2.5%;top:45%}
+.arena[data-player-count="4"] .opponent.seat-right{right:2.5%;top:45%}
+.arena[data-player-count="4"] .opponent.seat-top{top:2.5%}
+
+.arena[data-player-count="5"] .opponent{width:clamp(155px,15.5vw,200px)}
+.arena[data-player-count="5"] .opponent.seat-left{left:2%;top:45%}
+.arena[data-player-count="5"] .opponent.seat-right{right:2%;top:45%}
+.arena[data-player-count="5"] .opponent.seat-top-left{left:29%;top:2.5%}
+.arena[data-player-count="5"] .opponent.seat-top-right{right:29%;top:2.5%}
+
+.arena[data-player-count="6"] .opponent{width:clamp(145px,14.2vw,184px)}
+.arena[data-player-count="6"] .opponent.seat-mid-left{left:1.5%;top:42%}
+.arena[data-player-count="6"] .opponent.seat-mid-right{right:1.5%;top:42%}
+.arena[data-player-count="6"] .opponent.seat-top-left{left:20%;top:3.2%}
+.arena[data-player-count="6"] .opponent.seat-top{left:50%;top:1.2%}
+.arena[data-player-count="6"] .opponent.seat-top-right{right:20%;top:3.2%}
+
+/* Même logique sur le tableau des résultats. */
+.result-table[data-player-count="5"] .result-player{width:clamp(185px,21vw,260px)}
+.result-table[data-player-count="5"] .result-player.seat-top-left{left:27%;top:2%}
+.result-table[data-player-count="5"] .result-player.seat-top-right{right:27%;top:2%}
+.result-table[data-player-count="6"] .result-player{width:clamp(170px,19vw,235px)}
+.result-table[data-player-count="6"] .result-player.seat-top-left{left:19%;top:2.5%}
+.result-table[data-player-count="6"] .result-player.seat-top-right{right:19%;top:2.5%}
+.result-table[data-player-count="6"] .result-player.seat-mid-left{left:1%;top:41%}
+.result-table[data-player-count="6"] .result-player.seat-mid-right{right:1%;top:41%}
+
+@media (max-width:900px) and (min-width:701px){
+  .arena[data-player-count="5"] .opponent,.arena[data-player-count="6"] .opponent{width:145px}
+  .arena[data-player-count="6"] .opponent.seat-top-left{left:18%}.arena[data-player-count="6"] .opponent.seat-top-right{right:18%}
+}
+
+@media (max-width:700px){
+  #humanNameLabel{font-size:.70rem}.human-main-label{font-size:.46rem;letter-spacing:.65px}
+  .seat-reaction{right:5px;bottom:5px}.seat-reaction-toggle{min-width:34px;width:34px;height:30px;padding:0;font-size:0}.seat-reaction-toggle>span{display:none}.seat-reaction-toggle:first-letter{font-size:17px}
+  .seat-human .actions{padding-right:40px}
+  .seat-reaction .reaction-palette{position:absolute;right:0;bottom:36px;top:auto;max-width:190px;flex-wrap:wrap;justify-content:flex-end}
+  .pile-label-main{font-size:.52rem;letter-spacing:.7px}.pile-label-sub{font-size:.38rem}
+
+  .arena[data-player-count="2"] .opponent{width:116px}.arena[data-player-count="2"] .opponent.seat-top{top:2px}
+  .arena[data-player-count="3"] .opponent{width:112px}.arena[data-player-count="3"] .opponent.seat-left{left:3px;top:25%}.arena[data-player-count="3"] .opponent.seat-right{right:3px;top:25%}
+  .arena[data-player-count="4"] .opponent{width:108px}.arena[data-player-count="4"] .opponent.seat-left{left:2px;top:34%}.arena[data-player-count="4"] .opponent.seat-right{right:2px;top:34%}.arena[data-player-count="4"] .opponent.seat-top{top:2px}
+  .arena[data-player-count="5"] .opponent{width:104px}.arena[data-player-count="5"] .opponent.seat-left{left:1px;top:33%}.arena[data-player-count="5"] .opponent.seat-right{right:1px;top:33%}.arena[data-player-count="5"] .opponent.seat-top-left{left:23%;top:2px}.arena[data-player-count="5"] .opponent.seat-top-right{right:23%;top:2px}
+  .arena[data-player-count="6"] .opponent{width:100px}.arena[data-player-count="6"] .opponent.seat-mid-left{left:1px;top:31%}.arena[data-player-count="6"] .opponent.seat-mid-right{right:1px;top:31%}.arena[data-player-count="6"] .opponent.seat-top-left{left:17%;top:2px}.arena[data-player-count="6"] .opponent.seat-top{left:50%;top:1px}.arena[data-player-count="6"] .opponent.seat-top-right{right:17%;top:2px}
+  .arena[data-player-count="5"] .opponent-name,.arena[data-player-count="6"] .opponent-name{font-size:.60rem}
+  .arena[data-player-count="6"] .opponent-avatar{width:23px;height:23px;flex-basis:23px;font-size:14px}
+  .arena[data-player-count="6"] .mini-card{width:20px;height:30px;margin-left:-8px}
+
+  .result-table[data-player-count="5"] .result-player,.result-table[data-player-count="6"] .result-player{width:112px!important}
+  .result-table[data-player-count="5"] .result-player.seat-top-left{left:21%;top:1%}.result-table[data-player-count="5"] .result-player.seat-top-right{right:21%;top:1%}
+  .result-table[data-player-count="6"] .result-player.seat-top-left{left:16%;top:1%}.result-table[data-player-count="6"] .result-player.seat-top-right{right:16%;top:1%}.result-table[data-player-count="6"] .result-player.seat-mid-left{top:36%}.result-table[data-player-count="6"] .result-player.seat-mid-right{top:36%}
+}
+
+
+/* ========================================================================== */
+/* POK POK v0.10 — pioche/défausse simplifiées comme dans les premières versions. */
+/* ========================================================================== */
+.v05-table-zone .pile-wrap{
+  position:relative;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  transform:none!important;
+}
+.v05-table-zone .pile-wrap:before{display:none!important}
+.v05-table-zone .pile{
+  position:relative;
+  z-index:2;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:0 7px 16px rgba(0,0,0,.32)!important;
+  filter:none!important;
+}
+.v05-table-zone .pile img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border:0!important;
+  outline:0!important;
+  background:transparent!important;
+}
+.v05-table-zone .pile-label{
+  display:block!important;
+  margin-top:5px!important;
+  padding:0!important;
+  line-height:1!important;
+  text-align:center!important;
+  color:#fff4d2!important;
+  text-shadow:0 1px 4px #000!important;
+  background:transparent!important;
+}
+.pile-label-main{
+  display:block!important;
+  font-size:.68rem!important;
+  font-weight:1000!important;
+  letter-spacing:1.4px!important;
+  color:#fff4d2!important;
+}
+.pile-label-sub{display:none!important}
+.v05-table-zone .draw-wrap .pile-label-main:before,
+.v05-table-zone .discard-wrap .pile-label-main:before{content:none!important}
+@media (max-width:700px){
+  .v05-table-zone .pile-wrap{padding:0!important;border-radius:0!important}
+  .v05-table-zone .pile-label{margin-top:3px!important}
+  .pile-label-main{font-size:.54rem!important;letter-spacing:.85px!important}
+}
+\n\n/* ========================================================================== */
+/* POK POK v0.11 — statuts neutres, actions recentrées, labels de piles polis. */
+/* ========================================================================== */
+
+/* Les choix d'action restent réellement centrés sous l'éventail de cartes,
+   même avec le bouton Réagir ancré à droite du siège. */
+.seat-human .actions{
+  width:100%;
+  box-sizing:border-box;
+  padding-left:52px!important;
+  padding-right:52px!important;
+  justify-content:center!important;
+  align-items:center!important;
+  text-align:center!important;
+}
+.seat-human .actions .action-hint{
+  text-align:center;
+}
+
+/* PIOCHE / DÉFAUSSE : uniquement le mot, typographie nette et ludique,
+   sans contour ajouté autour des cartes. */
+.v05-table-zone .pile-label{
+  margin-top:6px!important;
+  min-height:17px;
+  display:flex!important;
+  justify-content:center!important;
+  align-items:center!important;
+  overflow:visible!important;
+}
+.pile-label-main{
+  position:relative;
+  display:inline-block!important;
+  font-family:Trebuchet MS,Segoe UI,Arial,sans-serif!important;
+  font-size:.69rem!important;
+  line-height:1.15!important;
+  font-weight:1000!important;
+  letter-spacing:1.55px!important;
+  color:#fff7d7!important;
+  text-shadow:0 2px 4px rgba(0,0,0,.88),0 0 8px rgba(255,217,0,.15)!important;
+  padding:0 2px 3px!important;
+}
+.pile-label-main:after{
+  content:"";
+  position:absolute;
+  left:14%;right:14%;bottom:0;
+  height:2px;
+  border-radius:999px;
+  background:linear-gradient(90deg,transparent,rgba(255,217,0,.86),transparent);
+  opacity:.85;
+}
+
+@media (max-width:700px){
+  .seat-human .actions{
+    padding-left:39px!important;
+    padding-right:39px!important;
+  }
+  .pile-label-main{
+    font-size:.55rem!important;
+    letter-spacing:.95px!important;
+    padding-bottom:2px!important;
+  }
+  .v05-table-zone .pile-label{margin-top:4px!important;min-height:14px}
+}
+
+
+/* ========================================================================== */
+/* POK POK v0.13 — les choix sont centrés sous l'éventail réellement visible. */
+/* ========================================================================== */
+.seat-human .actions{
+  position:relative!important;
+  left:var(--action-hand-shift,0px)!important;
+  transition:left .16s ease!important;
+}
+.table-hand-sprite.draw-hand{
+  filter:drop-shadow(0 7px 8px rgba(0,0,0,.62)) drop-shadow(0 0 9px rgba(255,217,0,.18));
+}
+@media (max-width:700px){
+  .seat-human .actions{transition:left .12s ease!important;}
+}
+
+
+/* ========================================================================== */
+/* POK POK v0.13 — vrai centrage des actions + repioche Bonus animée.         */
+/* ========================================================================== */
+
+/* Les boutons ne dépendent plus du centrage de la boîte du joueur :
+   leur point central est posé exactement sous le centre visuel des cartes. */
+.seat-human .actions{
+  position:absolute!important;
+  left:var(--action-center-x,50%)!important;
+  right:auto!important;
+  bottom:7px!important;
+  transform:translateX(-50%)!important;
+  width:max-content!important;
+  max-width:calc(100% - 28px)!important;
+  margin:0!important;
+  padding:0!important;
+  justify-content:center!important;
+  align-items:center!important;
+  text-align:center!important;
+  z-index:24;
+  transition:left .13s ease!important;
+}
+.seat-human .actions .action-hint{width:100%;text-align:center!important}
+
+/* Main de repioche beaucoup plus visible pour Chance / Pêcheur. */
+.bonus-repick-hand{
+  position:fixed;z-index:182;pointer-events:none;
+  font-size:54px;line-height:1;
+  filter:drop-shadow(0 9px 10px rgba(0,0,0,.65)) drop-shadow(0 0 11px rgba(255,217,0,.28));
+  transform-origin:50% 50%;
+}
+.bonus-repick-card{z-index:181!important;filter:drop-shadow(0 9px 12px rgba(0,0,0,.62))}
+.bonus-repick-label{
+  position:fixed;z-index:183;pointer-events:none;min-width:140px;
+  text-align:center;padding:7px 10px;border-radius:12px;
+  background:rgba(18,5,25,.94);border:1px solid rgba(255,217,0,.48);
+  box-shadow:0 8px 24px rgba(0,0,0,.42),0 0 18px rgba(255,217,0,.10);
+  color:#fff;font-weight:900;font-size:.72rem;letter-spacing:.2px;
+}
+.bonus-repick-label b{display:block;color:#ffe950;font-size:.80rem;letter-spacing:1px}
+.bonus-repick-label span{display:block;margin-top:2px;color:#fff7e0}
+
+@media (max-width:700px){
+  .seat-human .actions{
+    bottom:5px!important;
+    max-width:calc(100% - 12px)!important;
+    transition:left .10s ease!important;
+  }
+  .bonus-repick-hand{font-size:43px}
+  .bonus-repick-label{min-width:112px;padding:5px 7px;font-size:.61rem}
+  .bonus-repick-label b{font-size:.67rem}
+}
+
+
+/* ========================================================================== */
+/* POK POK v0.14 — score en cartouche et chrono uniquement au centre.         */
+/* ========================================================================== */
+/* Le sablier dans les sièges est volontairement supprimé : le chrono central
+   reste la seule référence afin de ne jamais masquer les prénoms. */
+.seat-player .timer-badge{display:none!important}
+
+/* Petit cartouche de score fixé au siège : plus grand et lisible d'un coup
+   d'œil, sans déplacer le reste de l'interface. */
+.seat-score-plate{
+  position:absolute;
+  left:50%;
+  z-index:48;
+  min-width:76px;
+  height:27px;
+  padding:0 10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:9px;
+  border:1px solid rgba(255,217,0,.62);
+  background:linear-gradient(180deg,rgba(48,19,58,.98),rgba(20,7,27,.98));
+  box-shadow:0 5px 14px rgba(0,0,0,.42),inset 0 0 0 1px rgba(255,255,255,.05),0 0 12px rgba(255,217,0,.09);
+  color:#fff5b8;
+  font-size:.82rem;
+  line-height:1;
+  font-weight:1000;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:.15px;
+  white-space:nowrap;
+  pointer-events:none;
+  text-shadow:0 1px 4px rgba(0,0,0,.9);
+}
+.opponent>.seat-score-plate{bottom:-14px;transform:translateX(-50%)}
+.seat-human>.seat-score-plate{top:-14px;transform:translateX(-50%)}
+.seat-player.active>.seat-score-plate{
+  border-color:#ffe85c;
+  box-shadow:0 5px 14px rgba(0,0,0,.42),0 0 17px rgba(255,217,0,.18);
+}
+
+@media (max-width:700px){
+  .seat-score-plate{min-width:58px;height:22px;padding:0 7px;border-radius:7px;font-size:.66rem}
+  .opponent>.seat-score-plate{bottom:-11px}
+  .seat-human>.seat-score-plate{top:-11px}
+}
+
+
+/* ========================================================================== */
+/* POK POK v0.15 — tour bloqué clair + journal aligné avec la main du joueur. */
+/* ========================================================================== */
+
+/* Le Blocage devient une vraie information visuelle, sans bouton parasite. */
+.blocked-turn-overlay{
+  position:absolute;inset:0;z-index:70;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:2px;pointer-events:auto;
+  border-radius:inherit;background:radial-gradient(circle at 50% 42%,rgba(78,16,54,.88),rgba(10,3,15,.94) 68%);
+  border:2px solid rgba(255,74,136,.62);box-shadow:inset 0 0 38px rgba(255,74,136,.12),0 0 24px rgba(255,74,136,.14);
+  animation:blockedTurnIn .28s ease-out both;
+}
+.blocked-turn-overlay .blocked-sign{font-size:clamp(2.1rem,4.2vw,3.5rem);line-height:1;filter:drop-shadow(0 5px 8px rgba(0,0,0,.55));animation:blockedSignPulse .72s ease-in-out infinite alternate}
+.blocked-turn-overlay strong{font-size:1rem;letter-spacing:1.3px;color:#ffd7e5;text-shadow:0 2px 7px #000}
+.blocked-turn-overlay small{font-size:.68rem;font-weight:850;color:#f4dbe6;text-align:center;padding:0 8px}
+.opponent-blocked-turn .blocked-sign{font-size:2rem}.opponent-blocked-turn strong{font-size:.76rem}.opponent-blocked-turn small{font-size:.56rem}
+.blocked-foot{color:#ff9cbd;font-weight:1000}
+.turn-timer.blocked-pass{border-color:#ff568f!important;color:#ffd8e5!important;background:rgba(239,22,136,.14)!important;animation:blockedTimerPulse .68s ease-in-out infinite alternate!important}
+@keyframes blockedTurnIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+@keyframes blockedSignPulse{from{transform:scale(.96) rotate(-2deg)}to{transform:scale(1.08) rotate(2deg)}}
+@keyframes blockedTimerPulse{from{box-shadow:0 0 10px rgba(255,74,136,.08)}to{box-shadow:0 0 24px rgba(255,74,136,.30)}}
+
+/* La dernière action a exactement la même largeur et le même axe que la case humaine. */
+.v05-log-panel{
+  width:min(700px,58vw)!important;
+  margin-left:auto!important;margin-right:auto!important;
+  display:grid!important;grid-template-columns:1fr!important;grid-template-rows:auto minmax(0,1fr)!important;
+  justify-items:center!important;align-items:center!important;text-align:center!important;
+  padding:4px 10px 5px!important;
+}
+.v05-log-panel .eyebrow{display:block!important;width:100%;text-align:center!important;line-height:1;font-size:.55rem!important;margin:0!important}
+.v05-log-panel .game-log{width:100%!important;justify-content:center!important;align-items:center!important;text-align:center!important;margin:0!important}
+.v05-log-panel .log-line:first-child{width:100%!important;text-align:center!important;margin:0 auto!important}
+
+@media (max-width:980px){.v05-log-panel{width:min(720px,72vw)!important}}
+@media (max-width:720px){
+  .v05-log-panel{width:88vw!important;padding:3px 7px 4px!important}
+  .v05-log-panel .eyebrow{font-size:.48rem!important}
+  .blocked-turn-overlay small{font-size:.60rem}
+}
+
+
+/* ========================================================================== */
+/* POK POK v0.16 — finition PC + vraie mise en page Android adaptative.       */
+/* ========================================================================== */
+
+/* Fin de manche à 6 joueurs : grille nette, aucune carte ne se chevauche. */
+@media (min-width:701px){
+  .result-table[data-player-count="6"]{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    grid-template-rows:repeat(2,minmax(0,1fr));
+    gap:12px 16px;
+    padding:12px 18px;
+    align-items:center;
+    justify-items:center;
+  }
+  .result-table[data-player-count="6"] .result-center-summary{display:none!important}
+  .result-table[data-player-count="6"] .result-player{
+    position:relative!important;
+    inset:auto!important;
+    left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
+    transform:none!important;
+    width:min(100%,300px)!important;
+    max-width:300px!important;
+    margin:0!important;
+  }
+  .result-table[data-player-count="6"] .result-mini-hand{width:min(100%,260px)!important}
+}
+
+/* Version discrète et stable dans le bandeau. */
+#roundLabel{white-space:nowrap;color:#e8dcec;font-weight:1000;letter-spacing:.4px}
+
+/* ------------------------------- ANDROID --------------------------------- */
+/* Le WebView reçoit une table dédiée : portrait et paysage sont traités
+   séparément, avec la même logique visuelle que la version ordinateur. */
+html.android-app,html.android-app body,html.android-app #app{
+  width:100%;height:100%;min-height:100%;overflow:hidden!important;
+}
+html.android-app body{-webkit-text-size-adjust:100%;touch-action:manipulation}
+html.android-app .topbar{padding-left:max(6px,env(safe-area-inset-left));padding-right:max(6px,env(safe-area-inset-right))}
+html.android-app main{max-width:none!important}
+html.android-app .arena{isolation:isolate}
+html.android-app .seat-player{box-shadow:0 8px 22px rgba(0,0,0,.38)}
+html.android-app .human-hand{overflow:visible!important}
+html.android-app .v05-log-panel .eyebrow{display:block!important}
+
+/* Portrait : table haute, adversaires autour, main bien séparée en bas. */
+@media (orientation:portrait) and (max-width:900px){
+  html.android-app .topbar{height:52px;padding-top:4px;padding-bottom:4px}
+  html.android-app .topbar .logo{height:42px;max-width:128px}
+  html.android-app .top-meta{gap:5px;min-width:0}
+  html.android-app #roundLabel{display:none!important}
+  html.android-app .sound-option{font-size:0;width:43px;height:40px;padding:0;display:grid;place-items:center}
+  html.android-app #musicBtn:before{content:'♫';font-size:1.35rem}
+  html.android-app #fxBtn:before{content:'🔔';font-size:1.05rem}
+  html.android-app #rulesBtn{height:40px;padding:0 10px;font-size:.76rem}
+  html.android-app #quitBtn{height:40px;width:43px;padding:0;font-size:0}
+  html.android-app #quitBtn:before{content:'↩';font-size:1.25rem}
+  html.android-app main{height:calc(100dvh - 52px);padding:3px 4px}
+  html.android-app #gameScreen.active.v05-game-layout{grid-template-rows:minmax(0,1fr) 62px;gap:4px}
+  html.android-app .arena{border-radius:18px}
+  html.android-app .table-felt{top:45%;width:92vw;height:48%;border-radius:47%}
+
+  html.android-app .v05-game-layout .opponent{
+    width:clamp(104px,30vw,132px);height:88px;padding:5px 6px;border-radius:13px;
+  }
+  html.android-app .opponent-avatar{width:30px;height:30px;flex-basis:30px;font-size:19px}
+  html.android-app .opponent-name{font-size:.72rem}
+  html.android-app .opponent-id small{display:none}
+  html.android-app .v05-game-layout .mini-hand{height:39px}
+  html.android-app .v05-game-layout .mini-card{width:27px;height:39px;margin-left:-10px}
+  html.android-app .v05-game-layout .opponent-foot{font-size:.55rem;line-height:12px;min-height:12px}
+  html.android-app .opponent .badge{font-size:.48rem;padding:2px 4px}
+
+  html.android-app .arena[data-player-count="2"] .opponent.seat-top{left:50%;top:1.2%}
+  html.android-app .arena[data-player-count="3"] .opponent.seat-left{left:1%;top:27%}
+  html.android-app .arena[data-player-count="3"] .opponent.seat-right{right:1%;top:27%}
+  html.android-app .arena[data-player-count="4"] .opponent.seat-left{left:1%;top:31%}
+  html.android-app .arena[data-player-count="4"] .opponent.seat-right{right:1%;top:31%}
+  html.android-app .arena[data-player-count="4"] .opponent.seat-top{top:1.2%}
+  html.android-app .arena[data-player-count="5"] .opponent.seat-top-left{left:27%;top:1.2%}
+  html.android-app .arena[data-player-count="5"] .opponent.seat-top-right{right:27%;top:1.2%}
+  html.android-app .arena[data-player-count="5"] .opponent.seat-left{left:1%;top:31%}
+  html.android-app .arena[data-player-count="5"] .opponent.seat-right{right:1%;top:31%}
+  html.android-app .arena[data-player-count="6"] .opponent{width:clamp(98px,28vw,120px);height:82px}
+  html.android-app .arena[data-player-count="6"] .opponent.seat-top-left{left:19%;top:1.2%}
+  html.android-app .arena[data-player-count="6"] .opponent.seat-top{left:50%;top:1.2%}
+  html.android-app .arena[data-player-count="6"] .opponent.seat-top-right{right:19%;top:1.2%}
+  html.android-app .arena[data-player-count="6"] .opponent.seat-mid-left{left:1%;top:30%}
+  html.android-app .arena[data-player-count="6"] .opponent.seat-mid-right{right:1%;top:30%}
+
+  html.android-app .v05-table-zone{
+    top:45%;width:min(78vw,350px);grid-template-columns:58px minmax(150px,1fr) 58px;gap:6px;
+  }
+  html.android-app .v05-table-zone .pile{width:52px}
+  html.android-app .v05-table-zone .panel-mini{padding:7px 8px;border-radius:12px}
+  html.android-app .turn-title{font-size:.86rem}
+  html.android-app .turn-hint{font-size:.66rem;line-height:1.13;max-height:2.35em;overflow:hidden}
+  html.android-app .turn-timer{height:27px;min-width:58px;margin-top:5px;font-size:.82rem}
+  html.android-app .pile-label-main{font-size:.59rem!important;letter-spacing:1px!important}
+
+  html.android-app .seat-human{
+    width:calc(100vw - 10px)!important;height:clamp(205px,31dvh,290px)!important;
+    bottom:2px!important;padding:6px 7px 7px!important;border-radius:16px!important;
+  }
+  html.android-app .seat-human .human-heading{min-height:40px}
+  html.android-app .human-avatar{width:39px;height:39px;flex-basis:39px;font-size:25px}
+  html.android-app .human-player-line{font-size:.78rem}
+  html.android-app .hand-eval{font-size:.86rem}
+  html.android-app .seat-human .human-hand{height:calc(100% - 77px);min-height:125px;padding:3px 1px 0}
+  html.android-app .seat-human .hand-card{height:clamp(118px,16dvh,154px);margin-left:clamp(-49px,-11.5vw,-30px);border-radius:9px}
+  html.android-app .seat-human .hand-card:first-child{margin-left:0}
+  html.android-app .human-hand[data-count="6"] .hand-card{height:clamp(112px,15dvh,145px);margin-left:clamp(-50px,-12.2vw,-33px)}
+  html.android-app .human-hand[data-count="7"] .hand-card,
+  html.android-app .human-hand[data-count="8"] .hand-card{height:clamp(105px,14dvh,136px);margin-left:clamp(-52px,-13.5vw,-37px)}
+  html.android-app .seat-human .actions{bottom:7px!important;max-width:calc(100% - 16px)!important;gap:5px}
+  html.android-app .seat-human .actions button{padding:7px 10px;font-size:.69rem}
+  html.android-app .seat-reaction{right:7px!important;bottom:6px!important}
+  html.android-app .seat-reaction-toggle{width:42px!important;height:42px!important;font-size:1.15rem!important}
+  html.android-app .seat-reaction-toggle span{display:none!important}
+  html.android-app .human-score-plate{top:-12px!important}
+
+  html.android-app .v05-log-panel{width:calc(100vw - 10px)!important;height:62px!important;padding:5px 10px!important;border-radius:13px!important}
+  html.android-app .v05-log-panel .eyebrow{font-size:.52rem!important}
+  html.android-app .v05-log-panel .log-line:first-child{font-size:.67rem!important;white-space:normal!important;line-height:1.15!important;display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+
+  /* Résultats téléphone portrait : 2 colonnes, jamais de chevauchement. */
+  html.android-app .v05-result-card{padding:7px 7px 9px!important}
+  html.android-app .result-table{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(0,1fr);gap:6px;padding:7px;overflow:auto!important}
+  html.android-app .result-table .result-center-summary{display:none!important}
+  html.android-app .result-table .result-player{position:relative!important;inset:auto!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;transform:none!important;width:100%!important;max-width:none!important;margin:0!important;padding:5px!important}
+  html.android-app .result-table .result-mini-hand{width:min(100%,150px)!important;margin:2px auto!important}
+  html.android-app .result-table .result-mini-hand img{width:calc(20% - 1px)!important;flex:0 1 auto!important}
+}
+
+/* Paysage : vraie table compacte type jeu de cartes, sans panneau humain géant. */
+@media (orientation:landscape) and (max-height:900px){
+  html.android-app .topbar{height:54px;padding:4px 10px}
+  html.android-app .topbar .logo{height:44px;max-width:132px}
+  html.android-app #roundLabel{font-size:.72rem}
+  html.android-app .top-meta{gap:6px}
+  html.android-app .ghost-btn{height:40px;padding:0 10px;font-size:.72rem}
+  html.android-app main{height:calc(100dvh - 54px);padding:3px 6px}
+  html.android-app #gameScreen.active.v05-game-layout{grid-template-rows:minmax(0,1fr) 52px;gap:4px}
+  html.android-app .arena{border-radius:18px}
+  html.android-app .table-felt{top:46%;width:68vw;height:58vh}
+  html.android-app .v05-game-layout .opponent{width:clamp(145px,17vw,205px);height:94px;padding:5px 7px}
+  html.android-app .v05-game-layout .mini-hand{height:42px}
+  html.android-app .v05-game-layout .mini-card{width:29px;height:42px;margin-left:-9px}
+  html.android-app .arena[data-player-count="5"] .opponent.seat-top-left{left:27%;top:2%}
+  html.android-app .arena[data-player-count="5"] .opponent.seat-top-right{right:27%;top:2%}
+  html.android-app .arena[data-player-count="6"] .opponent.seat-top-left{left:20%;top:2%}
+  html.android-app .arena[data-player-count="6"] .opponent.seat-top{left:50%;top:1.2%}
+  html.android-app .arena[data-player-count="6"] .opponent.seat-top-right{right:20%;top:2%}
+  html.android-app .arena[data-player-count="6"] .opponent.seat-mid-left{left:1%;top:39%}
+  html.android-app .arena[data-player-count="6"] .opponent.seat-mid-right{right:1%;top:39%}
+  html.android-app .v05-table-zone{top:45%;width:min(430px,40vw);grid-template-columns:70px minmax(180px,1fr) 70px;gap:9px}
+  html.android-app .v05-table-zone .pile{width:61px}
+  html.android-app .v05-table-zone .panel-mini{padding:8px 10px}
+  html.android-app .turn-title{font-size:.92rem}
+  html.android-app .turn-hint{font-size:.70rem}
+  html.android-app .seat-human{width:min(720px,62vw)!important;height:min(225px,34vh)!important;bottom:2px!important;padding:6px 9px!important}
+  html.android-app .seat-human .human-hand{height:calc(100% - 73px);min-height:104px}
+  html.android-app .seat-human .hand-card{height:min(18vh,138px);margin-left:-12px}
+  html.android-app .human-hand[data-count="6"] .hand-card{height:min(17vh,128px);margin-left:-18px}
+  html.android-app .human-hand[data-count="7"] .hand-card,
+  html.android-app .human-hand[data-count="8"] .hand-card{height:min(16vh,120px);margin-left:-22px}
+  html.android-app .seat-human .actions{bottom:7px!important}
+  html.android-app .seat-reaction-toggle span{display:inline!important}
+  html.android-app .v05-log-panel{width:min(720px,62vw)!important;height:52px!important;padding:4px 10px!important}
+  html.android-app .v05-log-panel .eyebrow{font-size:.50rem!important}
+  html.android-app .v05-log-panel .log-line:first-child{font-size:.67rem!important}
+
+  /* Résultats paysage : 3 colonnes x 2 lignes pour 6 joueurs. */
+  html.android-app .result-table{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:minmax(0,1fr);gap:7px 9px;padding:8px;overflow:auto!important}
+  html.android-app .result-table .result-center-summary{display:none!important}
+  html.android-app .result-table .result-player{position:relative!important;inset:auto!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;transform:none!important;width:100%!important;max-width:310px!important;margin:0 auto!important;padding:5px!important}
+  html.android-app .result-table .result-mini-hand{width:min(100%,220px)!important;margin:2px auto!important}
+  html.android-app .result-table .result-mini-hand img{width:calc(20% - 1px)!important;flex:0 1 auto!important}
+}
+
+
+/* ========================================================================== */
+/* POK POK v0.17 — tour actif très lisible + animations Bonus plus vivantes. */
+/* ========================================================================== */
+
+/* Le joueur actif ressort immédiatement, sans déplacer les sièges. */
+.seat-player.active{
+  border-color:#ffe33f!important;
+  box-shadow:0 0 0 3px rgba(255,224,55,.28) inset,0 0 0 2px rgba(255,224,55,.90),0 0 30px rgba(255,214,24,.42),0 10px 26px rgba(0,0,0,.42)!important;
+  filter:saturate(1.13) brightness(1.05);
+}
+.opponent.active.thinking:after{
+  inset:-5px!important;border:3px solid rgba(255,236,104,.92)!important;
+  box-shadow:0 0 18px rgba(255,218,32,.55),inset 0 0 16px rgba(255,218,32,.18);
+  animation:v017TurnRing .72s ease-in-out infinite alternate!important;
+}
+.seat-human.active:after{
+  content:"";position:absolute;inset:-5px;border-radius:inherit;pointer-events:none;z-index:3;
+  border:3px solid rgba(255,236,104,.92);box-shadow:0 0 19px rgba(255,218,32,.52),inset 0 0 18px rgba(255,218,32,.14);
+  animation:v017TurnRing .72s ease-in-out infinite alternate;
+}
+.turn-now-badge{
+  position:absolute;z-index:64;left:50%;top:-16px;transform:translateX(-50%);
+  min-width:max-content;padding:4px 10px;border-radius:999px;
+  border:2px solid rgba(255,239,116,.96);background:linear-gradient(180deg,#4d3300,#211100);
+  color:#fff8c9;font-size:.58rem;font-weight:1000;letter-spacing:.8px;text-shadow:0 2px 5px #000;
+  box-shadow:0 4px 10px rgba(0,0,0,.48),0 0 17px rgba(255,218,32,.45);
+  animation:v017BadgePop .32s cubic-bezier(.16,.88,.25,1.18) both;
+  pointer-events:none;
+}
+.turn-now-badge span{color:#ffe33f;margin-right:3px;animation:v017ArrowBlink .7s ease-in-out infinite alternate}
+.human-turn-badge{top:-19px;font-size:.65rem;padding:5px 13px}
+@keyframes v017TurnRing{from{opacity:.70;filter:brightness(.9)}to{opacity:1;filter:brightness(1.25)}}
+@keyframes v017BadgePop{from{opacity:0;transform:translateX(-50%) translateY(7px) scale(.75)}to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
+@keyframes v017ArrowBlink{from{opacity:.45;transform:translateX(-1px)}to{opacity:1;transform:translateX(2px)}}
+
+/* Cartes d'effets cachées : le dos reste très identifiable mais jamais le recto. */
+.hidden-effect-card{filter:drop-shadow(0 12px 15px rgba(0,0,0,.48)) saturate(.92)}
+.hidden-effect-card img{border:2px solid rgba(255,255,255,.20)!important;background:#16091d!important}
+.hidden-bomb-discard{filter:drop-shadow(0 10px 14px rgba(0,0,0,.55))}
+
+/* Particules ludiques : pure décoration, aucun impact sur le gameplay. */
+.fun-pop-particle{
+  position:fixed;z-index:96;pointer-events:none;font-size:21px;line-height:1;
+  filter:drop-shadow(0 4px 5px rgba(0,0,0,.62));will-change:transform,opacity;
+}
+.fun-pop-particle.fish{font-size:22px}.fun-pop-particle.chance{font-size:20px}.fun-pop-particle.steal{font-size:19px}.fun-pop-particle.bomb{font-size:24px}.fun-pop-particle.turn{font-size:15px;color:#ffe762}
+
+/* Le centre de table soutient aussi le tour actif. */
+.center-status{transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease}
+.center-status{box-shadow:0 8px 20px rgba(0,0,0,.34)}
+
+@media (max-width:700px){
+  .turn-now-badge{top:-12px;font-size:.46rem;padding:3px 7px;letter-spacing:.45px}
+  .human-turn-badge{top:-13px;font-size:.52rem;padding:4px 9px}
+  .seat-player.active{box-shadow:0 0 0 2px rgba(255,224,55,.28) inset,0 0 0 2px rgba(255,224,55,.88),0 0 20px rgba(255,214,24,.35),0 8px 18px rgba(0,0,0,.38)!important}
+}
+
+
+/* ========================================================================== */
+/* POK POK V0.19 — cadre haut intact, distribution et chrono résultats.      */
+/* ========================================================================== */
+
+/* Le siège du haut garde assez d'air pour le halo ET le badge TOUR EN COURS.
+   On ne touche pas aux autres placements. */
+.v05-game-layout .opponent.seat-top,
+.v05-game-layout .opponent.seat-top-left,
+.v05-game-layout .opponent.seat-top-right{top:max(18px,2.2%)!important}
+.opponent.active.thinking:after{inset:1px!important;border-radius:12px!important}
+
+/* Pendant la distribution, les mains réelles restent discrètes : seuls les dos
+   animés montrent la distribution, puis tout réapparaît immédiatement. */
+.arena.is-dealing .human-hand .hand-card,
+.arena.is-dealing .opponent .mini-card{opacity:0!important;transition:none!important}
+.arena.is-dealing .actions{visibility:hidden!important}
+
+.deal-fly-card{
+  position:fixed;z-index:125;width:46px;aspect-ratio:708/1063;pointer-events:none;
+  filter:drop-shadow(0 8px 10px rgba(0,0,0,.48));will-change:transform,opacity;
+}
+.deal-fly-card img{display:block;width:100%;height:100%;object-fit:cover;border-radius:5px;border:1px solid rgba(255,255,255,.18)}
+.deal-banner{
+  position:fixed;z-index:126;left:50%;top:34%;transform:translate(-50%,-50%) scale(.86);
+  display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;
+  border:1px solid rgba(255,231,91,.72);background:rgba(18,7,24,.92);color:#fff6bf;
+  box-shadow:0 10px 26px rgba(0,0,0,.46),0 0 20px rgba(255,217,0,.18);
+  font-size:.78rem;letter-spacing:.3px;opacity:0;transition:.18s ease;pointer-events:none;
+}
+.deal-banner.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.deal-banner span{font-size:1.15rem}.deal-banner strong{font-weight:1000}
+
+.result-countdown-v019{
+  flex:0 0 auto;display:flex;align-items:center;justify-content:center;gap:7px;
+  width:max-content;max-width:100%;margin:6px auto 7px;padding:7px 12px;border-radius:999px;
+  border:1px solid rgba(255,217,0,.45);background:rgba(255,217,0,.07);color:#efe4f4;
+  font-size:.72rem;font-weight:850;font-variant-numeric:tabular-nums;
+  box-shadow:0 5px 16px rgba(0,0,0,.28);white-space:nowrap;
+}
+.result-countdown-v019 strong{color:#fff5a8;font-size:.82rem}
+.result-countdown-v019.warning{border-color:#ff9f3c;background:rgba(255,159,60,.09)}
+.result-countdown-v019.danger{border-color:#ff568f;background:rgba(239,22,136,.12);animation:v019ResultPulse .45s ease-in-out infinite alternate}
+@keyframes v019ResultPulse{from{box-shadow:0 5px 16px rgba(0,0,0,.28)}to{box-shadow:0 5px 16px rgba(0,0,0,.28),0 0 18px rgba(255,86,143,.28)}}
+
+@media (max-width:700px){
+  .v05-game-layout .opponent.seat-top,
+  .v05-game-layout .opponent.seat-top-left,
+  .v05-game-layout .opponent.seat-top-right{top:15px!important}
+  .deal-fly-card{width:36px}
+  .deal-banner{top:38%;font-size:.64rem;padding:6px 10px}
+  .result-countdown-v019{font-size:.60rem;padding:5px 8px;gap:4px;margin:4px auto 5px}
+  .result-countdown-v019 strong{font-size:.68rem}
+}
+
+/* Android : mêmes protections, avec marge calculée pour portrait/paysage. */
+@media (orientation:portrait) and (max-width:900px){
+  html.android-app .v05-game-layout .opponent.seat-top,
+  html.android-app .v05-game-layout .opponent.seat-top-left,
+  html.android-app .v05-game-layout .opponent.seat-top-right{top:16px!important}
+  html.android-app .deal-banner{top:42%}
+}
+@media (orientation:landscape) and (max-height:900px){
+  html.android-app .v05-game-layout .opponent.seat-top,
+  html.android-app .v05-game-layout .opponent.seat-top-left,
+  html.android-app .v05-game-layout .opponent.seat-top-right{top:14px!important}
+  html.android-app .deal-banner{top:39%}
+}
+
+
+/* ========================================================================== */
+/* POK POK V0.21 — score humain en bas, sans toucher au rendu actif V0.19.    */
+/* ========================================================================== */
+/* Même logique visuelle que les adversaires : le score chevauche proprement
+   le bord inférieur du siège, mais on réserve juste assez d'air pour qu'il ne
+   rencontre ni les boutons ni le journal. */
+.seat-human>.seat-score-plate{
+  top:auto!important;
+  bottom:-13px!important;
+  transform:translateX(-50%)!important;
+}
+/* Remontée minime et fixe : évite les gros déplacements proportionnels qui
+   déformaient la composition dans la tentative précédente. */
+.seat-human{bottom:14px!important}
+
+@media (max-width:700px){
+  .seat-human>.seat-score-plate{bottom:-10px!important}
+  .seat-human{bottom:10px!important}
+}
+
+/* Android portrait/paysage : le score reste visible sous la case sans entrer
+   dans « Dernière action » et sans modifier la taille de la main. */
+@media (orientation:portrait) and (max-width:900px){
+  html.android-app .human-score-plate{top:auto!important;bottom:-10px!important}
+  html.android-app .seat-human{bottom:12px!important}
+}
+@media (orientation:landscape) and (max-height:900px){
+  html.android-app .human-score-plate{top:auto!important;bottom:-10px!important}
+  html.android-app .seat-human{bottom:11px!important}
+}
+
+
+/* ========================================================================== */
+/* POK POK V0.23 PC — plus de journal bas, zone joueur agrandie proprement.   */
+/* ========================================================================== */
+
+/* Le journal « Dernière action » est retiré du DOM : l'arène récupère toute
+   la hauteur disponible. */
+#gameScreen.active.v05-game-layout{
+  grid-template-rows:minmax(0,1fr)!important;
+  gap:0!important;
+}
+
+/* On profite de l'espace libéré pour donner de l'air à la main et séparer
+   clairement le bouton rose du compteur de points. */
+.seat-human{
+  width:min(740px,61vw)!important;
+  height:min(262px,35vh)!important;
+  bottom:16px!important;
+  padding:7px 12px 13px!important;
+}
+.seat-human .human-heading{min-height:36px!important}
+.seat-human .human-hand{
+  height:calc(100% - 82px)!important;
+  min-height:128px!important;
+  padding:4px 3px 5px!important;
+}
+.seat-human .hand-card{height:min(20vh,152px)!important}
+.seat-human .actions{
+  bottom:18px!important;
+  min-height:34px!important;
+  z-index:9!important;
+}
+.seat-human>.seat-score-plate{
+  bottom:-15px!important;
+  z-index:12!important;
+}
+
+/* Pendant la distribution, seules les cartes déjà reçues sont visibles. */
+.arena.is-dealing .human-hand .hand-card,
+.arena.is-dealing .opponent .mini-card{opacity:0!important;visibility:visible!important}
+.arena.is-dealing .human-hand .hand-card.deal-revealed,
+.arena.is-dealing .opponent .mini-card.deal-revealed{opacity:1!important}
+.deal-fly-card-v023{filter:drop-shadow(0 9px 12px rgba(0,0,0,.58)) drop-shadow(0 0 7px rgba(255,217,0,.12))}
+
+/* La main animée de pioche/défausse ressort davantage. */
+.table-hand-sprite.hand-emphasis-v023{
+  font-size:48px!important;
+  z-index:128!important;
+  filter:drop-shadow(0 9px 10px rgba(0,0,0,.72)) drop-shadow(0 0 13px rgba(255,217,0,.34))!important;
+}
+.table-hand-sprite.hand-emphasis-v023:after{
+  font-size:11px!important;
+  padding:3px 8px!important;
+  border-color:rgba(255,217,0,.58)!important;
+  box-shadow:0 4px 13px rgba(0,0,0,.38)!important;
+}
+
+@media (max-height:760px){
+  .seat-human{height:min(235px,34vh)!important;bottom:13px!important}
+  .seat-human .human-hand{min-height:112px!important;height:calc(100% - 78px)!important}
+  .seat-human .hand-card{height:min(18vh,136px)!important}
+  .seat-human .actions{bottom:16px!important}
+}
+@media (max-width:980px){
+  .seat-human{width:min(760px,75vw)!important}
+}
+
+/* ========================================================================== */
+/* POK POK V0.24 PC — finition score humain + échange Voleur plus lisible.    */
+/* ========================================================================== */
+
+/* On remonte légèrement toute la case du joueur. Le compteur reste attaché
+   au bord inférieur, mais il est désormais intégralement à l'intérieur de
+   l'arène, sans modifier la taille des cartes ni des boutons. */
+.seat-human{
+  bottom:30px!important;
+}
+.seat-human>.seat-score-plate{
+  bottom:-14px!important;
+}
+
+@media (max-height:760px){
+  .seat-human{bottom:25px!important}
+  .seat-human>.seat-score-plate{bottom:-12px!important}
+}
+
+/* Échange Voleur : une carte cachée accompagne réellement la main entre les
+   deux joueurs. Aucun recto n'est montré pendant le transfert. */
+.voleur-transfer-card-v024,
+.voleur-transfer-hand-v024{
+  position:fixed;
+  pointer-events:none;
+  z-index:146;
+  will-change:transform,opacity;
+}
+.voleur-transfer-card-v024{
+  width:58px;
+  aspect-ratio:416/603;
+  filter:drop-shadow(0 10px 14px rgba(0,0,0,.62)) drop-shadow(0 0 9px rgba(110,229,255,.22));
+}
+.voleur-transfer-card-v024 img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  border-radius:7px;
+}
+.voleur-transfer-hand-v024{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  font-size:44px;
+  line-height:1;
+  filter:drop-shadow(0 7px 9px rgba(0,0,0,.72));
+}
+.voleur-transfer-hand-v024 span{
+  margin-top:-2px;
+  padding:3px 7px;
+  border-radius:999px;
+  border:1px solid rgba(110,229,255,.55);
+  background:rgba(10,4,17,.94);
+  color:#eafdff;
+  font-size:10px;
+  font-weight:1000;
+  letter-spacing:.8px;
+  box-shadow:0 4px 12px rgba(0,0,0,.35);
+}
+
+
+/* ========================================================================== */
+/* POK POK V0.25 PC — finition actions + gestes + éclats Bonus.              */
+/* ========================================================================== */
+
+/* Le groupe rose/or (piocher, défausser, Pok Pok, fin de tour, etc.) est
+   posé sur un axe vertical calculé entre le bas réel des cartes et le haut
+   du compteur de points. On garde le centrage horizontal déjà validé. */
+.seat-human .actions{
+  top:var(--action-center-y,calc(100% - 32px))!important;
+  bottom:auto!important;
+  transform:translate(-50%,-50%)!important;
+  margin:0!important;
+}
+
+/* Les gestes déjà présents ressortent juste un peu mieux, sans grossir la
+   zone de jeu ni déplacer les cartes. */
+.table-hand-sprite.hand-emphasis-v023{
+  font-size:52px!important;
+  filter:drop-shadow(0 10px 11px rgba(0,0,0,.76)) drop-shadow(0 0 16px rgba(255,217,0,.40))!important;
+}
+.table-hand-sprite.hand-emphasis-v023:after{
+  font-size:11.5px!important;
+  padding:3px 9px!important;
+}
+
+/* Main dédiée aux défausses cachées (Pêcheur/Bombe) : toujours sans recto. */
+.hidden-gesture-hand-v025{
+  position:fixed;z-index:147;pointer-events:none;font-size:50px;line-height:1;
+  filter:drop-shadow(0 9px 11px rgba(0,0,0,.76)) drop-shadow(0 0 13px rgba(255,217,0,.28));
+  will-change:transform,opacity;
+}
+.hidden-gesture-hand-v025 span{
+  position:absolute;left:50%;top:42px;transform:translateX(-50%);
+  white-space:nowrap;padding:3px 8px;border-radius:999px;
+  border:1px solid rgba(255,217,0,.48);background:rgba(12,4,18,.94);
+  color:#fff7c7;font:1000 10px/1 Trebuchet MS,Segoe UI,Arial,sans-serif;
+  letter-spacing:.7px;box-shadow:0 4px 13px rgba(0,0,0,.38);
+}
+
+/* Repioche cachée rapide de Bombe : même langage visuel que la pioche normale. */
+.hidden-draw-card-v025{z-index:145!important;filter:drop-shadow(0 9px 12px rgba(0,0,0,.62))}
+
+/* Pok Pok et Bonus gagnent juste un petit supplément de lumière. */
+.event-burst.pok-flash-v025{
+  filter:drop-shadow(0 0 18px rgba(255,227,63,.55)) drop-shadow(0 0 34px rgba(239,22,136,.34));
+}
+.pok-spark-v025{
+  position:fixed;z-index:190;pointer-events:none;font-size:18px;line-height:1;
+  filter:drop-shadow(0 4px 6px rgba(0,0,0,.58));will-change:transform,opacity;
+}
+
+@media (max-height:760px){
+  .table-hand-sprite.hand-emphasis-v023{font-size:48px!important}
+  .hidden-gesture-hand-v025{font-size:46px}
+}
+
+/* ========================================================================== */
+/* POK POK V0.26 PC — micro-finitions : actions, textes et effets.            */
+/* ========================================================================== */
+
+/* Les boutons d'action restent centrés sous les cartes, mais sont remontés
+   très légèrement pour que l'espace visible soit équilibré avec le score. */
+.seat-human .actions{
+  top:var(--action-center-y26,var(--action-center-y,calc(100% - 40px)))!important;
+}
+
+/* Tous les messages de jeu/Bonus/POK POK sont visuellement centrés. */
+.center-status,
+.turn-title,
+.turn-hint,
+.toast,
+.event-burst,
+.event-burst>div,
+.event-burst .event-copy,
+.event-burst .event-copy>strong,
+.event-burst .event-detail,
+.bonus-repick-label,
+.hidden-gesture-hand-v025 span{
+  text-align:center!important;
+}
+.event-burst:not(.directed){justify-content:center!important}
+.event-burst:not(.directed)>div{flex:1;min-width:0}
+.event-burst.directed{justify-content:center!important}
+.event-burst.directed .event-copy{display:flex;flex-direction:column;align-items:stretch;justify-content:center}
+.event-burst .event-copy>strong{display:block;width:100%}
+.event-route{justify-content:center!important}
+
+/* Pioche et défausse : exactement la même présence visuelle, quel que soit
+   l'état cliquable de la pioche. */
+.v05-table-zone #drawPile,
+.v05-table-zone #discardPileVisual{
+  opacity:.93!important;
+}
+.v05-table-zone #drawPile img,
+.v05-table-zone #discardPileVisual img{
+  opacity:1!important;
+  filter:none!important;
+}
+
+/* Petit supplément d'énergie : halo court et net, sans alourdir l'arène. */
+.event-burst.v026-bonus-pop{
+  animation:eventPopSlow 2.55s cubic-bezier(.19,.85,.2,1) both,
+            v026BonusGlow .66s ease-out 1 both!important;
+}
+.event-burst.v026-pok-pop{
+  animation:eventPopSlow 2.55s cubic-bezier(.19,.85,.2,1) both,
+            v026PokGlow .78s ease-out 1 both!important;
+}
+.v026-event-halo{
+  position:fixed;left:50%;top:38%;width:110px;height:110px;border-radius:50%;
+  transform:translate(-50%,-50%) scale(.35);pointer-events:none;z-index:79;
+  border:3px solid rgba(255,231,82,.78);box-shadow:0 0 34px rgba(255,217,0,.34);
+  opacity:0;will-change:transform,opacity;
+}
+.v026-event-halo.bomb{border-color:rgba(255,153,39,.9);box-shadow:0 0 42px rgba(255,105,28,.38)}
+.v026-event-halo.steal{border-color:rgba(110,229,255,.9);box-shadow:0 0 40px rgba(110,229,255,.32)}
+.v026-event-halo.block{border-color:rgba(255,88,143,.9);box-shadow:0 0 40px rgba(255,88,143,.32)}
+.v026-event-halo.pok{border-color:rgba(255,245,75,.98);box-shadow:0 0 52px rgba(255,217,0,.46),0 0 72px rgba(239,22,136,.18)}
+.v026-mini-spark{
+  position:fixed;z-index:191;pointer-events:none;font-size:16px;line-height:1;
+  filter:drop-shadow(0 3px 5px rgba(0,0,0,.58));will-change:transform,opacity;
+}
+@keyframes v026BonusGlow{
+  0%{box-shadow:0 22px 70px rgba(0,0,0,.48),0 0 10px rgba(255,217,0,.08)}
+  42%{box-shadow:0 22px 70px rgba(0,0,0,.48),0 0 42px rgba(255,217,0,.38)}
+  100%{box-shadow:0 22px 70px rgba(0,0,0,.48),0 0 20px rgba(255,217,0,.16)}
+}
+@keyframes v026PokGlow{
+  0%{filter:brightness(1);box-shadow:0 22px 70px rgba(0,0,0,.48),0 0 18px rgba(255,217,0,.18)}
+  36%{filter:brightness(1.16);box-shadow:0 22px 70px rgba(0,0,0,.48),0 0 58px rgba(255,236,48,.55),0 0 82px rgba(239,22,136,.26)}
+  100%{filter:brightness(1);box-shadow:0 22px 70px rgba(0,0,0,.48),0 0 28px rgba(255,217,0,.22)}
+}
+
+/* ========================================================================== */
+/* POK POK V0.27 PC — audio continu, menu compact et POK POK scintillant.    */
+/* ========================================================================== */
+
+/* Le bouton de lancement reste clairement séparé du cartouche Avatar, mais
+   prend un peu moins de hauteur pour ne jamais mordre visuellement dessus. */
+#startBtn.primary.big{
+  padding:7px 22px!important;
+  line-height:1.15!important;
+  margin-top:5px!important;
+}
+
+/* Un scintillement supplémentaire, court et léger, uniquement lors de POK POK. */
+.pok-glitter-v027{
+  position:fixed;
+  z-index:194;
+  pointer-events:none;
+  font-size:17px;
+  line-height:1;
+  filter:drop-shadow(0 2px 5px rgba(0,0,0,.56)) drop-shadow(0 0 7px rgba(255,231,82,.56));
+  will-change:transform,opacity;
+}
+.event-burst.v027-pok-shimmer{
+  animation:eventPopSlow 2.55s cubic-bezier(.19,.85,.2,1) both,
+            v026PokGlow .78s ease-out 1 both,
+            v027PokShimmer 1.15s ease-in-out 2!important;
+}
+@keyframes v027PokShimmer{
+  0%,100%{filter:brightness(1)}
+  35%{filter:brightness(1.13) saturate(1.08)}
+  58%{filter:brightness(1.04)}
+}
+
+/* ========================================================================== */
+/* POK POK ONLINE V0.30 — V0.27 VISUAL BASE + ONLINE LOBBY                   */
+/* ========================================================================== */
+:root{--online-cyan:#58e7ff;--online-violet:#8a2dff;--online-pink:#f326a4}
+input{font:inherit}
+.wallet-top{display:inline-flex;align-items:center;gap:5px;padding:7px 11px;border-radius:999px;border:1px solid rgba(255,217,0,.55);background:rgba(53,12,69,.78);color:#fff3a0;box-shadow:0 0 18px rgba(255,217,0,.08)}
+.compact{padding:7px 10px!important;font-size:.75rem!important}.danger-action{background:linear-gradient(135deg,#ff3a6b,#a00038)!important}
+.online-lobby-screen.active{display:block;overflow:auto;padding:8px 0 18px}.online-lobby-shell{width:min(980px,96vw);margin:0 auto;min-height:100%;display:grid;place-items:center}.online-auth-card,.online-home-card{width:100%;border:2px solid rgba(255,217,0,.32);background:linear-gradient(160deg,rgba(33,6,45,.96),rgba(14,3,21,.96));box-shadow:0 22px 70px rgba(0,0,0,.42),inset 0 0 55px rgba(143,25,181,.08)}
+.online-auth-card{max-width:700px;padding:20px 28px;text-align:center}.online-hero-logo{width:155px;max-height:100px;object-fit:contain}.online-kicker{display:inline-block;padding:5px 10px;border:1px solid rgba(255,217,0,.45);border-radius:999px;color:#fff0a5;font-size:.67rem;font-weight:1000;letter-spacing:.7px;background:rgba(255,217,0,.05)}.online-auth-card h1{margin:10px 0 3px;color:#fff3a0}.online-sub{margin:0 auto 12px;color:#d7c6dd;max-width:590px;font-size:.86rem}.auth-tabs{display:flex;justify-content:center;gap:8px;margin:8px 0 11px}.tab{border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.07);color:#fff;padding:8px 15px;border-radius:999px;font-weight:900}.tab.active{border-color:var(--gold);color:#fff3a0;background:rgba(255,217,0,.1);box-shadow:0 0 16px rgba(255,217,0,.08)}.auth-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:left}.auth-fields label,.register-avatar-block>span{font-size:.76rem;font-weight:900;color:#f4e9fa}.auth-fields input{width:100%;margin-top:5px;padding:11px 12px;border-radius:11px;border:1px solid rgba(255,255,255,.17);background:#16091f;color:#fff;outline:none}.auth-fields input:focus{border-color:#ffbf34;box-shadow:0 0 0 2px rgba(255,217,0,.12)}.register-avatar-block{margin:11px auto 3px;display:flex;align-items:center;justify-content:center;gap:10px}.avatar-choice-button{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;border:1px solid rgba(255,217,0,.45);background:rgba(255,217,0,.07);color:#fff}.avatar-choice-button>span{font-size:1.4rem}.avatar-choice-button small{color:#fff0a5}.auth-submit{margin-top:12px;min-width:220px}
+.online-home-card{padding:14px 16px;min-height:min(720px,calc(100dvh - 82px))}.online-home-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:2px 4px 10px;border-bottom:1px solid rgba(255,255,255,.08)}.profile-mini,.home-head-actions{display:flex;align-items:center;gap:9px}.profile-mini h2{margin:1px 0 0}.profile-avatar-button{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;font-size:31px;border:2px solid var(--gold);background:radial-gradient(circle at 35% 30%,#f759c0,#5c1673);box-shadow:0 0 18px rgba(255,217,0,.18)}.rubies-box{display:flex;align-items:center;gap:5px;padding:5px 10px;border:1px solid rgba(77,229,255,.45);border-radius:11px;background:rgba(41,15,56,.72)}.rubies-box>span{font-size:1.25rem}.rubies-box b{display:block;font-size:1.05rem}.rubies-box small{display:block;font-size:.56rem;color:#d8c8e2}.daily-btn{border:1px solid rgba(255,217,0,.55);background:linear-gradient(135deg,rgba(255,217,0,.18),rgba(239,22,136,.12));color:#fff3a0;border-radius:11px;padding:8px 10px;font-weight:1000}.daily-btn:disabled{opacity:.55}
+.home-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:11px 0}.home-tab{border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.18);color:#d9cce2;border-radius:12px;padding:10px 8px;font-weight:1000;transition:.17s ease}.home-tab:hover{transform:translateY(-1px);border-color:rgba(255,217,0,.4)}.home-tab.active{color:#fff5b1;border-color:var(--gold);background:linear-gradient(135deg,rgba(255,217,0,.12),rgba(239,22,136,.12));box-shadow:0 0 18px rgba(255,217,0,.08)}.home-panel{display:none;animation:homePanelIn .22s ease}.home-panel.active{display:block}@keyframes homePanelIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.play-hero-strip,.feature-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border-radius:14px;background:radial-gradient(circle at 15% 50%,rgba(203,41,234,.18),rgba(255,255,255,.025));border:1px solid rgba(255,255,255,.08)}.play-hero-strip h3,.feature-head h3{margin:2px 0;color:#fff3a0}.play-hero-chip,.feature-chip{padding:7px 10px;border-radius:999px;border:1px solid rgba(255,217,0,.38);background:rgba(255,217,0,.07);font-size:.7rem;font-weight:1000;color:#fff1a6;white-space:nowrap}.online-setup-grid{margin:10px 0 8px}.tiers{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.tier{position:relative;min-height:93px;border:1px solid rgba(255,255,255,.13);border-radius:14px;background:linear-gradient(160deg,rgba(52,15,67,.8),rgba(18,5,25,.9));color:#fff;padding:9px 7px;display:grid;place-items:center;gap:1px;transition:.18s ease}.tier:hover{transform:translateY(-2px)}.tier.active{border:2px solid var(--gold);box-shadow:0 0 20px rgba(255,217,0,.12),inset 0 0 28px rgba(255,217,0,.05)}.tier.locked{filter:saturate(.45);opacity:.62}.tier-icon{font-size:1.45rem}.tier strong{font-size:.78rem}.tier b{color:#61edff}.tier small{font-size:.58rem;color:#bfadca}.pot-preview{display:flex;justify-content:center;gap:40px;margin:8px 0;padding:7px;border-radius:10px;background:rgba(0,0,0,.21);font-size:.76rem;color:#dfd0e7}.pot-preview strong{color:#6becff}.lobby-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.join-box{display:flex;justify-content:center;gap:6px;margin-top:8px}.join-box input{width:180px;text-transform:uppercase;text-align:center;letter-spacing:4px;border-radius:11px;border:1px solid rgba(255,255,255,.17);background:#16091f;color:#fff;font-weight:1000}.queue-box,.room-box{margin-top:9px;padding:9px 10px;border-radius:12px;border:1px solid rgba(255,217,0,.28);background:rgba(9,2,13,.58)}.queue-box{display:flex;justify-content:space-between;align-items:center}.room-title{font-size:1rem;color:#fff3a0}.room-players{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:7px 0}.room-player{padding:6px;border-radius:9px;background:rgba(255,255,255,.06);font-size:.72rem}.room-player.off{opacity:.5}
+.wheel-stage{display:grid;place-items:center;margin:14px 0 8px;position:relative}.wheel{width:min(330px,64vw);aspect-ratio:1;border-radius:50%;position:relative;border:9px solid #3b143f;box-shadow:0 0 0 3px var(--gold),0 15px 45px rgba(0,0,0,.45),inset 0 0 20px rgba(0,0,0,.35);background:conic-gradient(#f72585 0 60deg,#7209b7 60deg 120deg,#ffb703 120deg 180deg,#4cc9f0 180deg 240deg,#b5179e 240deg 300deg,#ffd60a 300deg 360deg);transition:transform 4.2s cubic-bezier(.08,.72,.12,1)}.wheel:before{content:'5 💎';position:absolute;left:50%;top:7%;transform:translateX(-50%);font-weight:1000;text-shadow:0 2px 4px #000}.wheel:after{content:'30 💎';position:absolute;left:50%;bottom:7%;transform:translateX(-50%);font-weight:1000;text-shadow:0 2px 4px #000}.wheel-center{position:absolute;inset:34%;border-radius:50%;display:grid;place-items:center;background:#19051e;border:4px solid #fff0a0;box-shadow:0 0 18px rgba(255,255,255,.25)}.wheel-center img{width:84%;height:84%;object-fit:contain}.wheel-pointer{position:absolute;top:-9px;z-index:3;font-size:2.2rem;color:#fff0a5;text-shadow:0 3px 8px #000}.wheel-legend{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:9px}.wheel-legend span{font-size:.66rem;padding:3px 6px;border-radius:999px;background:rgba(0,0,0,.32)}.wheel-spin-btn{display:block;margin:0 auto}.wheel-result{text-align:center;color:#fff3a0;font-weight:1000;min-height:1.4em}
+.shop-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:13px}.shop-pack{position:relative;min-height:150px;border-radius:15px;border:1px solid rgba(255,255,255,.14);background:linear-gradient(160deg,rgba(70,19,83,.85),rgba(15,4,22,.94));color:#fff;padding:13px 7px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;transition:.18s ease}.shop-pack:hover{transform:translateY(-3px);border-color:#69e9ff;box-shadow:0 10px 25px rgba(0,0,0,.28)}.shop-pack.popular,.shop-pack.best{border-color:var(--gold)}.shop-gem{font-size:2.1rem;filter:drop-shadow(0 0 8px rgba(76,218,255,.4))}.shop-pack b{font-size:.86rem}.shop-pack strong{font-size:1.05rem;color:#fff0a5}.shop-pack small{padding:4px 10px;border-radius:999px;background:linear-gradient(135deg,var(--pink),#a900e7);font-weight:900}.shop-badge{position:absolute;top:6px;font-size:.48rem;color:#2b1300;background:var(--gold);border-radius:999px;padding:3px 6px;font-weight:1000}.cosmetic-preview{margin-top:11px;padding:8px;border-radius:11px;background:rgba(255,255,255,.04);font-size:.72rem;color:#d6c7df;text-align:center}
+.profile-panel-grid{display:grid;grid-template-columns:260px 1fr;gap:14px;margin-top:15px}.profile-big-card{display:grid;place-items:center;padding:18px;border-radius:16px;background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.09)}.profile-big-avatar{width:100px;height:100px;border-radius:50%;display:grid;place-items:center;font-size:64px;background:radial-gradient(circle at 35% 28%,#fa5dca,#54146b);border:3px solid var(--gold);box-shadow:0 0 30px rgba(255,217,0,.15)}.profile-big-card h3{margin:8px 0}.profile-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}.profile-stats>div{display:flex;flex-direction:column;justify-content:center;padding:15px;border-radius:14px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08)}.profile-stats span{font-size:.65rem;color:#c7b6d0}.profile-stats strong{margin-top:4px;color:#fff2a4}
+.avatar-modal-card{width:min(720px,94vw);padding:18px}.avatar-modal-card h2{text-align:center;margin:4px 0 12px}.avatar-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}.avatar-grid button{border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.2);color:#fff;border-radius:13px;padding:8px 4px;display:grid;place-items:center;gap:3px}.avatar-grid button span{font-size:2rem}.avatar-grid button b{font-size:.62rem}.avatar-grid button.selected{border:2px solid var(--gold);background:rgba(255,217,0,.08);box-shadow:0 0 18px rgba(255,217,0,.1)}
+
+/* Jeu : on réutilise la géométrie et la sensation de la V0.27. */
+#game.active.v05-game-layout{display:block!important;height:100%;overflow:hidden}.online-game-screen .arena{height:100%}.online-game-screen .opponents{position:absolute;inset:0;display:block;pointer-events:none;z-index:4}.online-game-screen .opponent{pointer-events:auto}.opponent .seat-head{display:flex;align-items:center;gap:6px;min-width:0}.opponent .seat-head>div{display:flex;flex-direction:column;min-width:0}.opponent .seat-head b{font-size:.84rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.opponent .seat-head small{font-size:.57rem;color:#ae9ab8;text-transform:uppercase;letter-spacing:.5px}.opponent .seat-head .badge{margin-left:auto}.opponent.active-turn{border-color:var(--gold)!important;box-shadow:0 0 0 2px rgba(255,217,0,.18) inset,0 0 30px rgba(255,217,0,.22)!important;animation:onlineSeatGlow .8s ease-in-out infinite alternate}.seat-human.active-turn{border-color:var(--gold)!important;box-shadow:0 0 0 2px rgba(255,217,0,.18) inset,0 0 34px rgba(255,217,0,.22)!important}.turn-now-badge{position:absolute;left:50%;top:-23px;transform:translateX(-50%);padding:4px 10px;border-radius:999px;background:#1a0c05;border:2px solid var(--gold);color:#fff3a0;font-size:.58rem;font-weight:1000;letter-spacing:1px;white-space:nowrap;box-shadow:0 0 18px rgba(255,217,0,.25)}@keyframes onlineSeatGlow{from{filter:brightness(.96)}to{filter:brightness(1.12)}}
+.online-game-screen .seat-human{width:min(790px,64vw);height:min(260px,36vh);bottom:2.2%!important}.online-game-screen .seat-human .human-hand{height:calc(100% - 72px);min-height:135px}.online-game-screen .seat-human .hand-card{height:min(21vh,170px);margin-left:-10px}.online-game-screen .seat-human .hand-card:first-child{margin-left:0}.human-hand[data-count="6"] .hand-card{margin-left:-18px}.human-hand[data-count="7"] .hand-card{margin-left:-28px}.human-hand[data-count="8"] .hand-card{margin-left:-36px}.hand-card.selectable{cursor:pointer;outline-color:rgba(255,217,0,.35);animation:selectableGlow 1.15s ease-in-out infinite alternate}.hand-card.selectable:hover{transform:translateY(-17px) rotate(var(--fan-rot,0deg)) scale(1.05)!important;z-index:20;outline-color:var(--gold);box-shadow:0 17px 32px rgba(0,0,0,.52),0 0 0 3px rgba(255,217,0,.45)}.hand-card.selected{transform:translateY(-22px) rotate(var(--fan-rot,0deg)) scale(1.05)!important;outline-color:#ffdb36!important;box-shadow:0 18px 34px rgba(0,0,0,.5),0 0 22px rgba(255,217,0,.34)!important}@keyframes selectableGlow{from{box-shadow:0 7px 18px rgba(0,0,0,.38),0 0 0 rgba(255,217,0,0)}to{box-shadow:0 8px 22px rgba(0,0,0,.42),0 0 15px rgba(255,217,0,.16)}}
+.online-game-screen .v05-table-zone{top:43%;width:min(545px,45vw);grid-template-columns:80px minmax(220px,1fr) 80px;gap:12px}.online-game-screen .v05-table-zone .pile{width:68px;opacity:1!important}.online-game-screen .draw-wrap .pile img,.online-game-screen .discard-wrap .pile img{opacity:1!important;filter:none!important}.round-info{font-size:.58rem;color:#cdbfd4;letter-spacing:1px;text-transform:uppercase;font-weight:900}.event-line{min-height:1.05em;margin-top:3px;font-size:.62rem;color:#cdbfd4}.pot-ingame{display:inline-block;margin-top:5px;padding:3px 7px;border-radius:999px;border:1px solid rgba(74,231,255,.32);background:rgba(26,11,35,.7);font-size:.62rem;color:#79efff;font-weight:1000}.turn-timer{display:inline-flex;align-items:center;justify-content:center;gap:4px;margin-top:6px;min-width:72px;height:31px;padding:0 10px;border-radius:999px;border:1px solid rgba(255,217,0,.48);background:rgba(255,217,0,.07);color:#fff3a0;font-weight:1000;box-shadow:0 5px 14px rgba(0,0,0,.2)}.turn-timer.warning{border-color:#ff9e2d;color:#ffd193;animation:timerWarn .6s ease-in-out infinite alternate}.turn-timer.danger{border-color:#ff397a;color:#ffd4e1;animation:timerDanger .35s ease-in-out infinite alternate}@keyframes timerWarn{to{transform:scale(1.035)}}@keyframes timerDanger{to{transform:scale(1.075);box-shadow:0 0 20px rgba(255,57,122,.25)}}
+.online-game-screen .actions{position:absolute!important;left:50%!important;bottom:20px!important;transform:translateX(-50%)!important;width:max-content!important;max-width:74%!important;min-height:0!important;display:flex!important;justify-content:center!important;align-items:center!important;gap:7px!important;z-index:25}.online-game-screen .actions button{white-space:nowrap}.online-game-screen .human-score-plate{top:auto!important;bottom:-14px!important;transform:translateX(-50%)!important}.action-hint{width:100%;text-align:center;color:#d9c8e1;font-size:.68rem}.primary-action{background:linear-gradient(135deg,var(--pink),#b100ff)!important;border-color:#ff76cc!important}.targetable{cursor:pointer!important;box-shadow:0 0 0 2px rgba(93,235,255,.58) inset,0 0 30px rgba(93,235,255,.23)!important;animation:targetPulse .62s ease-in-out infinite alternate}@keyframes targetPulse{to{filter:brightness(1.18);transform:scale(1.015)}}
+.connection-banner{position:absolute;left:50%;top:10px;transform:translateX(-50%);z-index:90;background:#6d153b;border:1px solid #ff6c99;border-radius:999px;padding:6px 12px;font-size:.7rem;font-weight:1000}.target-chooser{position:fixed;z-index:85;left:50%;top:52%;transform:translate(-50%,-50%);width:min(680px,92vw);padding:12px;background:rgba(13,4,18,.97);border:2px solid rgba(255,217,0,.48);border-radius:17px;box-shadow:0 20px 60px rgba(0,0,0,.48)}
+
+/* Animations V0.27 / Online renforcées */
+.fx-layer{position:fixed;inset:0;pointer-events:none;z-index:120;overflow:hidden}.flying-card{position:fixed;width:76px;aspect-ratio:416/603;z-index:126;transition:transform .36s cubic-bezier(.18,.76,.2,1),opacity .12s ease;filter:drop-shadow(0 12px 13px rgba(0,0,0,.55));transform-origin:center}.flying-card img{width:100%;height:100%;object-fit:contain;border-radius:8px}.fx-hand{position:fixed;z-index:130;font-size:64px;line-height:1;filter:drop-shadow(0 9px 8px rgba(0,0,0,.56)) drop-shadow(0 0 8px rgba(255,255,255,.18));transition:transform .34s cubic-bezier(.18,.8,.2,1),opacity .12s ease;transform-origin:center bottom}.fx-hand:after{content:attr(data-label);position:absolute;left:50%;top:58px;transform:translateX(-50%);white-space:nowrap;font-size:9px;font-weight:1000;padding:3px 6px;border-radius:999px;background:#100516;border:1px solid rgba(255,255,255,.22);color:#fff}.spark{position:fixed;z-index:132;pointer-events:none;font-size:18px;font-weight:1000;text-shadow:0 2px 6px rgba(0,0,0,.55);animation:onlineSpark .95s cubic-bezier(.12,.68,.2,1) forwards}@keyframes onlineSpark{0%{opacity:0;transform:translate(-50%,-50%) scale(.2) rotate(0)}18%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.65) rotate(220deg)}}.event-burst{position:fixed;left:50%;top:47%;transform:translate(-50%,-50%) scale(.72);z-index:129;display:flex;align-items:center;gap:12px;min-width:260px;max-width:min(640px,90vw);padding:12px 17px;border-radius:19px;background:rgba(14,3,20,.94);border:2px solid rgba(255,217,0,.58);box-shadow:0 18px 60px rgba(0,0,0,.48),0 0 28px rgba(255,217,0,.13);opacity:0;pointer-events:none;text-align:center;transition:opacity .17s ease,transform .22s cubic-bezier(.18,.9,.2,1)}.event-burst.show{opacity:1;transform:translate(-50%,-50%) scale(1)}.event-burst.pok{border-color:#ffe734;box-shadow:0 18px 70px rgba(0,0,0,.5),0 0 52px rgba(255,226,44,.36);animation:pokBurstPulse .48s ease-in-out infinite alternate}.event-burst.bombe{border-color:#ff4d65;box-shadow:0 18px 70px rgba(0,0,0,.5),0 0 46px rgba(255,59,78,.28)}@keyframes pokBurstPulse{to{filter:brightness(1.16);transform:translate(-50%,-50%) scale(1.025)}}.event-burst-art img{width:75px;max-height:105px;object-fit:contain;border-radius:8px;filter:drop-shadow(0 8px 10px rgba(0,0,0,.45))}.event-copy{flex:1;text-align:center}.event-copy>div:first-child{font-size:1.35rem;font-weight:1000;color:#fff2a0;text-shadow:0 2px 10px rgba(255,217,0,.18)}.event-copy>div:last-child{margin-top:3px;color:#f0e7f3;font-size:.78rem}.deal-banner{position:fixed;left:50%;top:47%;transform:translate(-50%,-50%);z-index:128;padding:8px 16px;border-radius:999px;background:rgba(13,4,18,.94);border:2px solid var(--gold);font-weight:1000;color:#fff2a0;box-shadow:0 0 24px rgba(255,217,0,.16)}.screen-shake{animation:screenShake .42s ease}@keyframes screenShake{0%,100%{transform:none}20%{transform:translate(-5px,2px)}40%{transform:translate(5px,-2px)}60%{transform:translate(-3px,-1px)}80%{transform:translate(3px,1px)}}
+
+.reaction-wrap{position:absolute!important;right:10px!important;bottom:10px!important;z-index:27}.reaction-toggle{border:1px solid #4ba7ff;background:rgba(12,47,79,.86);color:#fff;border-radius:999px;padding:7px 10px;font-weight:1000}.reaction-palette{position:absolute;right:0;bottom:46px;display:flex;gap:5px;padding:6px;border-radius:999px;background:rgba(13,4,18,.96);border:1px solid rgba(255,255,255,.18)}.reaction-emoji{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.15);background:#2c1733;color:#fff;font-size:1.05rem}.player-reaction-bubble{position:fixed;z-index:132;transform:translate(-50%,-50%);font-size:2.2rem;animation:reactionPop 1.1s ease forwards}@keyframes reactionPop{0%{opacity:0;transform:translate(-50%,-20%) scale(.2)}25%{opacity:1;transform:translate(-50%,-60%) scale(1.2)}70%{opacity:1}100%{opacity:0;transform:translate(-50%,-130%) scale(.9)}}
+
+.result-hands{position:relative;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;min-height:0;height:auto!important;overflow:auto!important;padding:7px}.result-player{position:relative!important;inset:auto!important;transform:none!important;width:100%!important;padding:9px!important;border:1px solid rgba(255,255,255,.11);border-radius:13px;background:rgba(15,5,20,.92)}.result-player.winner{border-color:var(--gold);box-shadow:0 0 18px rgba(255,217,0,.1)}.result-player h3{margin:0 0 4px}.result-player .cards{display:flex;justify-content:center}.result-player .cards img{width:min(74px,18%);height:auto;object-fit:contain;margin-left:-7px;border-radius:5px}.result-player .cards img:first-child{margin-left:0}.rubies-result{color:#64edff;font-weight:1000;text-align:center}.result-countdown{display:flex;align-items:center;justify-content:center;gap:7px;color:#fff3a0;margin:4px 0;font-size:.72rem}.result-countdown strong{padding:3px 7px;border-radius:999px;border:1px solid rgba(255,217,0,.4)}
+
+.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:180;max-width:min(600px,90vw);padding:9px 13px;border-radius:999px;background:rgba(15,5,20,.96);border:1px solid rgba(255,217,0,.42);color:#fff;font-size:.74rem;font-weight:900;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+
+/* Mobile portrait : conserver la disposition déjà validée en V0.29, mais avec les effets V0.27. */
+@media (max-width:700px) and (orientation:portrait){
+  .topbar{height:64px;padding:5px 8px}.topbar .logo{height:52px;max-width:132px}.top-meta{gap:4px}.top-meta>#roundLabel{display:none}.top-meta .sound-option{font-size:0;width:42px;height:42px;padding:0}.top-meta #musicBtn:before{content:'♫';font-size:1.35rem}.top-meta #fxBtn:before{content:'🔔';font-size:1.15rem}.top-meta #rulesBtn{font-size:.68rem;padding:8px}.wallet-top{padding:7px 9px}.quit-btn{font-size:0;width:42px;height:42px;padding:0}.quit-btn:before{content:'↩';font-size:1.2rem}
+  main{height:calc(100dvh - 64px);padding:3px}.online-lobby-screen.active{padding:3px 0 12px}.online-auth-card,.online-home-card{border-radius:16px;padding:10px 8px}.online-home-card{min-height:calc(100dvh - 72px)}.online-home-head{align-items:flex-start}.profile-avatar-button{width:42px;height:42px;font-size:26px}.home-head-actions{gap:4px;flex-wrap:wrap;justify-content:flex-end}.daily-btn{font-size:.58rem;padding:6px}.home-head-actions .ghost-btn{font-size:.56rem;padding:6px}.rubies-box{padding:4px 7px}.home-tabs{gap:3px}.home-tab{font-size:.62rem;padding:8px 3px}.play-hero-strip,.feature-head{padding:8px;align-items:flex-start}.play-hero-strip h3,.feature-head h3{font-size:.82rem}.play-hero-chip,.feature-chip{font-size:.51rem;padding:5px}.online-setup-grid{grid-template-columns:1fr 1fr;gap:6px}.online-setup-grid label{font-size:.65rem}.online-setup-grid select{font-size:.68rem;padding:7px}.tiers{grid-template-columns:repeat(2,1fr);gap:5px}.tier{min-height:74px;padding:5px}.tier-icon{font-size:1.15rem}.pot-preview{gap:10px;font-size:.63rem}.lobby-actions{grid-template-columns:1fr}.join-box input{width:145px}.room-players{grid-template-columns:repeat(2,1fr)}.shop-grid{grid-template-columns:repeat(2,1fr)}.shop-pack{min-height:120px}.profile-panel-grid{grid-template-columns:1fr}.profile-big-card{padding:10px}.profile-big-avatar{width:80px;height:80px;font-size:50px}.profile-stats{gap:5px}.profile-stats>div{padding:9px}.avatar-grid{grid-template-columns:repeat(4,1fr)}
+  #game.active.v05-game-layout{height:100%;display:block!important}.online-game-screen .arena{border-radius:17px}.online-game-screen .v05-game-layout .opponent,.online-game-screen .opponent{width:132px;height:102px;padding:5px 6px}.arena[data-player-count="2"] .opponent.seat-top{left:50%;top:1.5%}.arena[data-player-count="3"] .opponent.seat-left{left:1%;top:27%}.arena[data-player-count="3"] .opponent.seat-right{right:1%;top:27%}.arena[data-player-count="4"] .opponent.seat-top{top:1%}.arena[data-player-count="4"] .opponent.seat-left{left:1%;top:26%}.arena[data-player-count="4"] .opponent.seat-right{right:1%;top:26%}.arena[data-player-count="5"] .opponent{width:112px;height:92px}.arena[data-player-count="5"] .opponent.seat-top-left{left:27%;top:1%}.arena[data-player-count="5"] .opponent.seat-top-right{right:27%;top:1%}.arena[data-player-count="5"] .opponent.seat-left{left:1%;top:27%}.arena[data-player-count="5"] .opponent.seat-right{right:1%;top:27%}.arena[data-player-count="6"] .opponent{width:102px;height:85px}.arena[data-player-count="6"] .opponent.seat-top-left{left:18%;top:1%}.arena[data-player-count="6"] .opponent.seat-top{left:50%;top:.5%}.arena[data-player-count="6"] .opponent.seat-top-right{right:18%;top:1%}.arena[data-player-count="6"] .opponent.seat-mid-left{left:.5%;top:25%}.arena[data-player-count="6"] .opponent.seat-mid-right{right:.5%;top:25%}
+  .online-game-screen .v05-table-zone{top:42%;width:calc(100vw - 14px);max-width:420px;grid-template-columns:64px minmax(185px,1fr) 64px;gap:4px}.online-game-screen .v05-table-zone .pile{width:58px}.online-game-screen .v05-table-zone .panel-mini{padding:7px 6px}.round-info{font-size:.51rem}.turn-title{font-size:1rem}.turn-hint{font-size:.7rem;max-height:none}.event-line{font-size:.57rem}.turn-timer{height:30px;min-width:64px;font-size:.84rem}.pot-ingame{font-size:.56rem}
+  .online-game-screen .seat-human{width:calc(100vw - 8px);height:clamp(285px,40dvh,355px);bottom:10px!important;padding:6px 7px!important}.online-game-screen .seat-human .human-heading{min-height:44px}.online-game-screen .seat-human .human-hand{height:calc(100% - 84px);min-height:180px;padding:3px 0 0}.online-game-screen .seat-human .hand-card{height:clamp(155px,21dvh,205px);margin-left:clamp(-32px,-6vw,-18px)}.online-game-screen .human-hand[data-count="6"] .hand-card{height:clamp(148px,20dvh,196px);margin-left:clamp(-43px,-8vw,-27px)}.online-game-screen .human-hand[data-count="7"] .hand-card{height:clamp(141px,19dvh,188px);margin-left:clamp(-53px,-10vw,-34px)}.online-game-screen .human-hand[data-count="8"] .hand-card{height:clamp(134px,18dvh,180px);margin-left:clamp(-61px,-12vw,-40px)}.online-game-screen .actions{bottom:18px!important;max-width:72%!important;gap:4px!important}.online-game-screen .actions button{font-size:.67rem!important;padding:7px 9px!important}.online-game-screen .human-score-plate{bottom:-11px!important}.reaction-wrap{right:7px!important;bottom:8px!important}.reaction-toggle{width:46px;height:46px;padding:0;font-size:1.15rem}.reaction-toggle span{display:none}.reaction-palette{right:0;bottom:52px;flex-direction:column;border-radius:18px}.event-burst{top:45%;max-width:94vw;padding:8px 10px}.event-burst-art img{width:55px}.event-copy>div:first-child{font-size:1rem}.event-copy>div:last-child{font-size:.65rem}.fx-hand{font-size:52px}.flying-card{width:62px}
+  .v05-result-card{width:100vw;height:100dvh;border-radius:0!important;padding:8px!important}.result-hands{grid-template-columns:1fr 1fr}.result-player{font-size:.62rem}.rules-book-card{width:100vw;height:100dvh;border-radius:0;padding:6px}.book-stage{height:calc(100% - 86px)}
+}
+
+/* Mobile paysage : table complète, main + adversaires visibles sans zoom navigateur. */
+@media (max-height:700px) and (orientation:landscape){
+  .topbar{height:48px;padding:3px 8px}.topbar .logo{height:39px}.top-meta>#roundLabel{font-size:.62rem}.top-meta{gap:4px}.ghost-btn{padding:5px 7px;font-size:.65rem}.wallet-top{padding:5px 8px;font-size:.7rem}main{height:calc(100dvh - 48px);padding:2px 4px}.online-lobby-screen.active{overflow:auto}.online-home-card{min-height:auto}.online-home-head{padding-bottom:5px}.home-tabs{margin:5px 0}.home-tab{padding:6px}.play-hero-strip{display:none}.online-setup-grid{margin:5px 0}.tiers{gap:4px}.tier{min-height:62px;padding:4px}.tier-icon{font-size:1rem}.tier small{display:none}.pot-preview{margin:4px 0;padding:4px}.lobby-actions .big{padding:8px}.shop-grid{grid-template-columns:repeat(5,1fr)}.shop-pack{min-height:100px;padding:6px}.shop-gem{font-size:1.4rem}
+  #game.active.v05-game-layout{height:100%;display:block!important}.online-game-screen .opponent{height:90px;width:clamp(145px,17vw,205px)}.arena[data-player-count="6"] .opponent{width:135px;height:80px}.online-game-screen .v05-table-zone{top:39%;width:min(520px,49vw);grid-template-columns:74px minmax(210px,1fr) 74px}.online-game-screen .v05-table-zone .pile{width:63px}.online-game-screen .seat-human{width:min(760px,68vw);height:clamp(175px,43dvh,235px);bottom:6px!important}.online-game-screen .seat-human .human-hand{height:calc(100% - 72px);min-height:105px}.online-game-screen .seat-human .hand-card{height:clamp(102px,27dvh,145px);margin-left:-10px}.online-game-screen .human-hand[data-count="6"] .hand-card{margin-left:-21px}.online-game-screen .human-hand[data-count="7"] .hand-card{margin-left:-31px}.online-game-screen .human-hand[data-count="8"] .hand-card{margin-left:-40px}.online-game-screen .actions{bottom:12px!important}.fx-hand{font-size:48px}.flying-card{width:58px}.event-burst{top:43%;padding:7px 11px}.event-burst-art img{width:50px}
+}
+.online-game-screen .arena.is-dealing .hand-card:not(.deal-revealed),.online-game-screen .arena.is-dealing .mini-card:not(.deal-revealed){opacity:0!important;transform:translateY(12px) scale(.84)!important}.online-game-screen .arena.is-dealing .hand-card.deal-revealed,.online-game-screen .arena.is-dealing .mini-card.deal-revealed{opacity:1!important;transition:opacity .13s ease,transform .18s ease!important}
+.stealable{cursor:pointer!important;outline:2px solid #65ebff!important;animation:selectableGlow .55s ease-in-out infinite alternate}

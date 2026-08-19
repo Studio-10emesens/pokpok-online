@@ -1,0 +1,11 @@
+{
+  "name": "pokpok-online-v030",
+  "version": "0.30.0",
+  "private": true,
+  "description": "POK POK Online V0.30 : comptes, rubis quotidiens, salons 2-6 joueurs, matchmaking et animations.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test_online.js"
+  }
+}
