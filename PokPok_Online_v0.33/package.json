@@ -1,0 +1,14 @@
+{
+  "name": "pokpok-online-v033",
+  "version": "0.33.0",
+  "private": true,
+  "description": "POK POK Online V0.33 : comptes, bonus inscription + roulette quotidienne, salons 2-6 joueurs, matchmaking et animations.",
+  "main": "server.js",
+  "dependencies": {
+    "firebase-admin": "^13.0.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test_online.js"
+  }
+}

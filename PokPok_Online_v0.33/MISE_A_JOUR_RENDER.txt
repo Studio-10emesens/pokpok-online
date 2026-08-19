@@ -1,0 +1,26 @@
+POK POK ONLINE V0.33 — MISE À JOUR RENDER
+=========================================
+
+IMPORTANT : CETTE FOIS, METTRE V0.33 À LA RACINE GITHUB.
+
+Structure correcte :
+pokpok-online/
+  PokPok_Online_v0.28/
+  PokPok_Online_v0.33/
+
+Ne pas déposer V0.33 à l'intérieur de V0.28 ou V0.29.
+
+ÉTAPES :
+1. Dézipper PokPok_Online_v0.33.zip sur le PC.
+2. Sur GitHub, revenir à la RACINE du dépôt « pokpok-online » en cliquant sur son nom en haut.
+3. Add file > Upload files.
+4. Glisser le dossier ENTIER « PokPok_Online_v0.33 ».
+5. Commit changes.
+6. Render > pokpok-online > Settings > Build.
+7. Root Directory = PokPok_Online_v0.33
+8. Build Command = npm install
+9. Start Command = npm start
+10. Enregistrer.
+11. Revenir sur la page du service > Manual Deploy > Deploy latest commit.
+
+L'adresse https://pokpok-online.onrender.com reste la même si le même service Render est conservé.

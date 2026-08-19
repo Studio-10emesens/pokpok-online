@@ -1,0 +1,24 @@
+POK POK ONLINE V0.33 - ACTIVER GOOGLE / FACEBOOK / TELEPHONE
+
+La V0.33 contient déjà les boutons et le code. Ils restent en mode « à configurer » tant que Firebase n'est pas relié.
+
+1) Créer un projet Firebase : https://console.firebase.google.com/
+2) Authentication > Sign-in method : activer Google, Facebook et Phone.
+3) Pour Facebook, Firebase demande l'App ID + App Secret Meta et fournit l'URI OAuth à recopier dans Meta Developers.
+4) Authentication > Settings > Authorized domains : ajouter pokpok-online.onrender.com (et ton futur domaine).
+5) Project settings > Your apps > Web app : relever la configuration Firebase.
+6) Dans Render > pokpok-online > Environment, ajouter :
+   FIREBASE_API_KEY
+   FIREBASE_AUTH_DOMAIN
+   FIREBASE_PROJECT_ID
+   FIREBASE_APP_ID
+   FIREBASE_MESSAGING_SENDER_ID
+7) Firebase > Project settings > Service accounts > Generate new private key.
+   Copier le JSON COMPLET en une seule variable Render :
+   FIREBASE_SERVICE_ACCOUNT_JSON
+8) Redéployer le service.
+
+IMPORTANT
+- Sans ces clés, identifiant/PIN fonctionne toujours normalement.
+- Les clés publiques Firebase côté Web ne sont pas des mots de passe ; la clé de compte de service, elle, doit rester SECRETE dans Render.
+- Pour la connexion téléphone, configure aussi la politique des régions SMS dans Firebase Authentication.
