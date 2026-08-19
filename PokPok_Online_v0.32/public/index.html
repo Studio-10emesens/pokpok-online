@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <title>POK POK Online - V0.32</title>
+  <link rel="stylesheet" href="online.css" />
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <img src="assets/logo.png" class="logo" alt="POK POK" />
+    <div class="top-meta">
+      <span id="roundLabel">V0.32 ONLINE</span>
+      <span id="walletTop" class="wallet-top hidden">💎 <b id="walletTopValue">0</b></span>
+      <div class="audio-options" aria-label="Options audio">
+        <button id="musicBtn" class="ghost-btn sound-option">♫ Musique : ON</button>
+        <button id="fxBtn" class="ghost-btn sound-option">🔔 Effets : ON</button>
+      </div>
+      <button id="rulesBtn" class="ghost-btn">📖 Règles</button>
+      <button id="quitBtn" class="ghost-btn quit-btn hidden">↩ Quitter</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="lobby" class="screen active online-lobby-screen">
+      <div class="online-lobby-shell">
+        <div id="authCard" class="panel online-auth-card">
+          <img src="assets/logo.png" class="online-hero-logo" alt="POK POK" />
+          <div class="online-kicker">ONLINE V0.32 • COMPTES • RUBIS • 2 À 6 JOUEURS</div>
+          <h1>Bienvenue dans POK POK</h1>
+          <p class="online-sub">Connecte-toi, choisis ta mise et trouve automatiquement des adversaires en ligne.</p>
+          <div class="auth-tabs">
+            <button id="loginTab" class="tab active">Connexion</button>
+            <button id="registerTab" class="tab">Créer un compte</button>
+          </div>
+          <div class="social-auth-block">
+            <div class="social-auth-title">Connexion rapide</div>
+            <div class="social-auth-grid">
+              <button id="googleLoginBtn" class="social-auth-btn google" type="button"><span>G</span> Google</button>
+              <button id="facebookLoginBtn" class="social-auth-btn facebook" type="button"><span>f</span> Facebook</button>
+              <button id="phoneLoginBtn" class="social-auth-btn phone" type="button"><span>☎</span> Téléphone</button>
+            </div>
+            <div id="socialAuthHint" class="social-auth-hint">Ou utilise ton identifiant POK POK ci-dessous.</div>
+          </div>
+          <div class="auth-fields">
+            <label>Identifiant<input id="authUser" maxlength="18" autocomplete="username" placeholder="Votre pseudo" /></label>
+            <label>Mot de passe / PIN<input id="authSecret" type="password" maxlength="64" autocomplete="current-password" placeholder="4 caractères minimum" /></label>
+          </div>
+          <div id="registerAvatarBlock" class="register-avatar-block hidden">
+            <span>Animal de départ</span>
+            <button id="registerAvatarButton" class="avatar-choice-button" type="button"><span id="registerAvatarEmoji">🦆</span><b id="registerAvatarName">Canard</b><small>Changer</small></button>
+            <input id="registerAvatar" type="hidden" value="duck" />
+          </div>
+          <button id="authSubmit" class="primary big auth-submit">Se connecter</button>
+          <p class="small-note">🎁 50 rubis offerts une seule fois à l’inscription. Ensuite, la roulette quotidienne est votre bonus gratuit.</p>
+        </div>
+
+        <div id="homeCard" class="panel online-home-card hidden">
+          <div class="online-home-head">
+            <div class="profile-mini">
+              <button id="profileAvatarButton" class="profile-avatar-button" type="button"><span id="profileAvatarEmoji">🦆</span></button>
+              <div><div class="eyebrow">COMPTE CONNECTÉ</div><h2 id="profileName">Joueur</h2></div>
+            </div>
+            <div class="home-head-actions">
+              <div class="rubies-box"><span>💎</span><div><b id="rubiesValue">0</b><small>rubis</small></div></div>
+              <div id="dailyBtn" class="daily-btn signup-note">🎁 50 rubis offerts à l’inscription</div>
+              <button id="logoutBtn" class="ghost-btn compact">Déconnexion</button>
+            </div>
+          </div>
+
+          <nav class="home-tabs" aria-label="Navigation principale">
+            <button class="home-tab active" data-tab="play">🎮 Jouer</button>
+            <button class="home-tab" data-tab="wheel">🎡 Roulette</button>
+            <button class="home-tab" data-tab="shop">🛍 Boutique</button>
+            <button class="home-tab" data-tab="profile">👤 Profil</button>
+          </nav>
+
+          <section class="home-panel active" data-panel="play">
+            <div class="play-hero-strip">
+              <div><span class="eyebrow">MATCHMAKING</span><h3>Choisis ton niveau et trouve une table</h3></div>
+              <div class="play-hero-chip">Le gagnant prend le pot 💎</div>
+            </div>
+
+            <div class="setup-grid online-setup-grid">
+              <label class="game-choice-label">Nombre de joueurs
+                <button id="playersChoiceBtn" class="game-choice-button" type="button"><span id="playersChoiceText">2 joueurs</span><span class="choice-chevron">⌄</span></button>
+                <input id="playersInput" type="hidden" value="2" />
+              </label>
+              <label class="game-choice-label">Objectif
+                <button id="targetChoiceBtn" class="game-choice-button" type="button"><span id="targetChoiceText">Partie rapide - 500 points</span><span class="choice-chevron">⌄</span></button>
+                <input id="targetInput" type="hidden" value="500" />
+              </label>
+            </div>
+
+            <div class="tiers" id="tiers">
+              <button class="tier active" data-tier="debutant"><span class="tier-icon">🌱</span><strong>Débutant</strong><b>10 💎</b><small>Pour se lancer</small></button>
+              <button class="tier" data-tier="intermediaire"><span class="tier-icon">⚡</span><strong>Intermédiaire</strong><b>20 💎</b><small>Plus de tension</small></button>
+              <button class="tier" data-tier="expert"><span class="tier-icon">🔥</span><strong>Expert</strong><b>50 💎</b><small>Gros pot</small></button>
+              <button class="tier" data-tier="legende"><span class="tier-icon">👑</span><strong>Légende</strong><b>100 💎</b><small>Pour les patrons</small></button>
+            </div>
+
+            <div class="pot-preview"><span>Mise par joueur : <b id="stakePreview">10</b> 💎</span><span>Pot du gagnant : <strong id="potPreview">20</strong> 💎</span></div>
+
+            <div class="lobby-actions matchmaking-only">
+              <button id="quickBtn" class="primary big">⚡ Trouver une partie</button>
+            </div>
+            <div id="queueBox" class="queue-box hidden"><span id="queueText"></span><button id="cancelQueueBtn" class="ghost-btn compact">Annuler</button></div>
+            <div id="roomBox" class="room-box hidden" aria-hidden="true"><div id="roomCodeLabel"></div><div id="roomMeta"></div><div id="roomPlayers"></div><button id="startOnlineBtn" class="hidden"></button></div>
+          </section>
+
+          <section class="home-panel" data-panel="wheel">
+            <div class="feature-head"><div><span class="eyebrow">CADEAU QUOTIDIEN</span><h3>La Roulette POK POK</h3><p>Un tour gratuit par jour • moyenne statistique : 50 rubis • jackpot 100 💎.</p></div><div id="wheelStatus" class="feature-chip">🎡 1 tour disponible</div></div>
+            <div class="wheel-stage">
+              <div class="wheel-disk-wrap">
+                <div class="wheel-pointer">▼</div>
+                <div id="wheel" class="wheel" aria-label="Roulette des rubis">
+                  <span class="wheel-segment-label">10 💎</span>
+                  <span class="wheel-segment-label">20 💎</span>
+                  <span class="wheel-segment-label">40 💎</span>
+                  <span class="wheel-segment-label wheel-wow wheel-wow-50">50 💎</span>
+                  <span class="wheel-segment-label">80 💎</span>
+                  <span class="wheel-segment-label wheel-wow wheel-wow-100">100 💎</span>
+                </div>
+                <div class="wheel-center wheel-center-fixed"><img src="assets/logo.png" alt="POK POK" /></div>
+              </div>
+              <div class="wheel-legend"><span>10 💎</span><span>20 💎</span><span>40 💎</span><span>50 💎</span><span>80 💎</span><span>100 💎</span></div>
+            </div>
+            <button id="spinWheelBtn" class="primary big wheel-spin-btn">🎡 Tourner la roulette</button>
+            <p id="wheelResult" class="wheel-result">Bonne chance !</p>
+          </section>
+
+          <section class="home-panel" data-panel="shop">
+            <div class="feature-head"><div><span class="eyebrow">BOUTIQUE</span><h3>Recharge tes rubis</h3><p>Les packs sont prêts dans l’interface. Le paiement réel sera branché à la boutique de l’application avant publication.</p></div><div class="feature-chip">💎 Paiement sécurisé à brancher</div></div>
+            <div class="shop-grid">
+              <button class="shop-pack" data-pack="50" data-price="1,49 €"><span class="shop-gem">💎</span><b>50 rubis</b><strong>1,49 €</strong><small>Acheter</small></button>
+              <button class="shop-pack popular" data-pack="100" data-price="1,99 €"><span class="shop-badge">POPULAIRE</span><span class="shop-gem">💎</span><b>100 rubis</b><strong>1,99 €</strong><small>Acheter</small></button>
+              <button class="shop-pack" data-pack="250" data-price="2,99 €"><span class="shop-gem">💎</span><b>250 rubis</b><strong>2,99 €</strong><small>Acheter</small></button>
+              <button class="shop-pack" data-pack="500" data-price="4,99 €"><span class="shop-gem">💎</span><b>500 rubis</b><strong>4,99 €</strong><small>Acheter</small></button>
+              <button class="shop-pack best" data-pack="1000" data-price="7,99 €"><span class="shop-badge">MEILLEURE VALEUR</span><span class="shop-gem">💎</span><b>1000 rubis</b><strong>7,99 €</strong><small>Acheter</small></button>
+            </div>
+            <div class="cosmetic-preview"><b>À venir :</b> avatars, dos de cartes, réactions, effets POK POK et thèmes de table.</div>
+          </section>
+
+          <section class="home-panel" data-panel="profile">
+            <div class="profile-panel-grid">
+              <div class="profile-big-card"><div id="profileBigAvatar" class="profile-big-avatar">🦆</div><h3 id="profileBigName">Joueur</h3><button id="changeAvatarBtn" class="secondary">Changer mon animal</button></div>
+              <div class="profile-stats"><div><span>Solde</span><strong>💎 <b id="profileRubies">0</b></strong></div><div><span>Bonus gratuit</span><strong>1 roulette / jour</strong></div><div><span>Mode disponible</span><strong>2 à 6 joueurs</strong></div><div><span>Objectifs</span><strong>500 / 1000 pts</strong></div></div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section id="game" class="screen game-layout v05-game-layout online-game-screen">
+      <div id="connectionBanner" class="connection-banner hidden"></div>
+      <div class="arena" id="arena" data-player-count="2">
+        <div class="table-felt" aria-hidden="true"></div>
+        <div id="opponents" class="opponents"></div>
+
+        <div class="table-zone v05-table-zone">
+          <div class="pile-wrap draw-wrap">
+            <button id="drawPile" class="pile card-back-button" aria-label="Pioche">
+              <img src="assets/card_back.jpg" alt="Pioche" />
+            </button>
+            <div class="pile-label"><span class="pile-label-main">PIOCHE</span></div>
+          </div>
+
+          <div id="centerStatus" class="center-status panel-mini">
+            <div id="turnTitle" class="turn-title">Connexion…</div>
+            <div id="turnHint" class="turn-hint">Patientez.</div>
+            <div id="turnTimer" class="turn-timer"><span class="timer-icon">⏱</span><span id="turnTimerValue">45</span><span class="timer-unit">s</span></div>
+          </div>
+          <div class="online-match-meta" aria-hidden="true"><span id="roundInfo">Manche 1</span><span id="eventLine"></span><span id="potInGame">💎 Pot : 0</span></div>
+
+          <div class="pile-wrap discard-wrap">
+            <div id="discardPile" class="pile card-back-button inactive-pile">
+              <img src="assets/card_back.jpg" alt="Défausse face cachée" />
+            </div>
+            <div class="pile-label"><span class="pile-label-main">DÉFAUSSE</span></div>
+          </div>
+        </div>
+
+        <section id="humanSeat" class="human-zone panel seat-player seat-human" data-player-index="0">
+          <div id="meScore" class="seat-score-plate human-score-plate">0 pts</div>
+          <div class="human-heading">
+            <div class="human-title-wrap">
+              <div id="meAvatar" class="avatar human-avatar">🦆</div>
+              <div><div class="human-player-line"><span id="meName">VOUS</span><span class="human-main-label"> • VOTRE MAIN</span></div><div id="handEval" class="hand-eval">-</div></div>
+            </div>
+            <div class="human-badges"><span id="meBlocked" class="badge hot hidden">BLOQUÉ</span><span id="meDealer" class="badge gold hidden">DONNEUR</span><span id="mePok" class="badge hot hidden">POK POK</span></div>
+          </div>
+          <div id="humanHand" class="human-hand"></div>
+          <div id="actions" class="actions"></div>
+          <div id="reactionWrap" class="reaction-wrap seat-reaction">
+            <button id="reactionToggle" class="reaction-toggle seat-reaction-toggle" title="Réagir">😊<span> Réagir</span></button>
+            <div id="reactionPalette" class="reaction-palette hidden">
+              <button class="reaction-emoji" data-emoji="😄">😄</button><button class="reaction-emoji" data-emoji="😂">😂</button><button class="reaction-emoji" data-emoji="😢">😢</button><button class="reaction-emoji" data-emoji="😱">😱</button><button class="reaction-emoji" data-emoji="😡">😡</button>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div id="targetChooser" class="target-chooser hidden"></div>
+    </section>
+  </main>
+
+  <div id="choiceModal" class="modal hidden choice-modal" role="dialog" aria-modal="true" aria-label="Choix des paramètres de partie">
+    <div class="modal-card choice-modal-card">
+      <button id="closeChoiceModal" class="modal-close" aria-label="Fermer">×</button>
+      <div class="eyebrow">PARAMÈTRES DE PARTIE</div>
+      <h2 id="choiceModalTitle">Choisis une option</h2>
+      <div id="choiceOptions" class="choice-options"></div>
+    </div>
+  </div>
+
+  <div id="avatarModal" class="modal hidden">
+    <div class="modal-card avatar-modal-card">
+      <button id="closeAvatarModal" class="modal-close">×</button>
+      <div class="eyebrow">CHOIX DE L’AVATAR</div><h2>Choisis ton animal</h2>
+      <div id="avatarGrid" class="avatar-grid"></div>
+    </div>
+  </div>
+
+  <div id="phoneAuthModal" class="modal hidden">
+    <div class="modal-card phone-auth-card">
+      <button id="closePhoneAuth" class="modal-close">×</button>
+      <div class="eyebrow">CONNEXION TÉLÉPHONE</div><h2>Recevoir un code SMS</h2>
+      <label>Numéro au format international<input id="phoneNumberInput" inputmode="tel" autocomplete="tel" placeholder="+33 6 12 34 56 78" /></label>
+      <button id="sendPhoneCodeBtn" class="primary big" type="button">Envoyer le code</button>
+      <div id="phoneCodeStep" class="hidden"><label>Code reçu<input id="phoneCodeInput" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456" /></label><button id="confirmPhoneCodeBtn" class="primary big" type="button">Se connecter</button></div>
+      <div id="phoneRecaptcha"></div>
+      <p class="small-note">La connexion SMS utilise Firebase Authentication une fois configuré dans Render.</p>
+    </div>
+  </div>
+
+  <div id="quitModal" class="modal hidden">
+    <div class="modal-card quit-confirm-card">
+      <div class="quit-confirm-icon">🃏</div><h2>Quitter la partie ?</h2>
+      <p>Vous reviendrez au menu. Si la partie a commencé, votre place restera déconnectée pendant le délai de reconnexion.</p>
+      <div class="quit-confirm-actions"><button id="cancelQuitBtn" class="secondary big">Non, continuer</button><button id="confirmQuitBtn" class="primary big danger-action">Oui, quitter</button></div>
+    </div>
+  </div>
+
+  <div id="roundModal" class="modal hidden">
+    <div class="modal-card result-card v05-result-card">
+      <h2 id="resultTitle">Fin de manche</h2>
+      <p id="resultNote" class="result-note"></p><p id="rubiesResult" class="rubies-result"></p>
+      <div id="resultCountdown" class="result-countdown hidden"><span>⏱ Manche suivante dans</span><strong><span id="resultCountdownValue">45</span> s</strong></div>
+      <div id="resultHands" class="result-hands result-table"></div>
+      <button id="nextRoundBtn" class="primary big hidden">Manche suivante</button>
+    </div>
+  </div>
+
+  <div id="rulesModal" class="modal hidden">
+    <div class="modal-card rules-book-card">
+      <button class="modal-close" id="closeRules">×</button>
+      <div class="book-header"><div><div class="eyebrow">LIVRET OFFICIEL</div><h2>Règles de POK POK</h2></div><div class="book-tools"><div id="rulesPageCounter" class="book-counter">Page 1 / 16</div><div class="book-zoom-controls"><button id="ruleZoomOut" class="book-zoom-btn" type="button">−</button><button id="ruleZoomValue" class="book-zoom-value" type="button">100%</button><button id="ruleZoomIn" class="book-zoom-btn" type="button">+</button></div></div></div>
+      <div class="book-stage"><button id="prevRule" class="book-nav book-prev">‹</button><div id="bookPageShell" class="book-page-shell"><div id="bookZoomLayer" class="book-zoom-layer"><img id="rulePage" src="assets/rules/page-01.jpg" alt="Page 1" /></div></div><button id="nextRule" class="book-nav book-next">›</button></div>
+      <div class="book-footer"><button id="prevRuleText" class="book-footer-btn">← Page précédente</button><div id="ruleCounter" class="book-help">1 / 16</div><button id="nextRuleText" class="book-footer-btn">Page suivante →</button></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+  <div id="eventBurst" class="event-burst"><div id="eventBurstArt" class="event-burst-art"></div><div class="event-copy"><div id="eventBurstTitle"></div><div id="eventBurstText"></div></div></div>
+  <div id="fxLayer" class="fx-layer" aria-hidden="true"></div>
+</div>
+<audio id="menuMusic" src="assets/audio/menu_loop.wav" loop preload="auto"></audio>
+<audio id="gameMusic" src="assets/audio/game_loop.wav" loop preload="auto"></audio>
+<script src="online.js"></script>
+</body>
+</html>
