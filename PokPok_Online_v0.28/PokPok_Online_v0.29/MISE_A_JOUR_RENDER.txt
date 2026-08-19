@@ -1,0 +1,10 @@
+MISE A JOUR DE V0.28 VERS V0.29 SUR RENDER
+
+1. Envoyer le dossier PokPok_Online_v0.29 dans le même dépôt GitHub.
+2. Dans Render > votre service POK POK > Settings :
+   Root Directory = PokPok_Online_v0.29
+3. Build Command = npm install
+4. Start Command = npm start
+5. Enregistrer puis lancer Deploy latest commit.
+
+L'adresse onrender.com reste la même si vous réutilisez le même service Render.

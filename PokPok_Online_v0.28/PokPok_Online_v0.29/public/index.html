@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+  <title>POK POK Online - V0.29</title>
+  <link rel="stylesheet" href="online.css" />
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <img src="assets/logo.png" class="logo" alt="POK POK">
+    <div class="top-actions">
+      <span class="version">V0.29 ONLINE</span>
+      <span id="walletTop" class="wallet-top hidden">💎 <b id="walletTopValue">0</b></span>
+      <button id="musicBtn" class="ghost">♫ Musique : ON</button>
+      <button id="rulesBtn" class="ghost">📖 Règles</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="lobby" class="screen active">
+      <div class="lobby-shell">
+        <div id="authCard" class="panel auth-card">
+          <img src="assets/logo.png" class="hero-logo" alt="POK POK">
+          <div class="prototype-pill">ONLINE V0.29 • COMPTES • RUBIS • 2 À 6 JOUEURS</div>
+          <h1>Connexion joueur</h1>
+          <p class="sub">Crée ton compte de test ou reconnecte-toi. Les rubis sont gérés côté serveur.</p>
+          <div class="auth-tabs"><button id="loginTab" class="tab active">Connexion</button><button id="registerTab" class="tab">Créer un compte</button></div>
+          <div class="auth-fields">
+            <label>Identifiant<input id="authUser" maxlength="18" autocomplete="username" placeholder="Votre pseudo"></label>
+            <label>Mot de passe / PIN<input id="authSecret" type="password" maxlength="64" autocomplete="current-password" placeholder="4 caractères minimum"></label>
+            <label id="registerAvatarLabel" class="hidden">Animal<select id="registerAvatar"></select></label>
+          </div>
+          <button id="authSubmit" class="primary big">Se connecter</button>
+          <p class="note">Un nouveau compte reçoit immédiatement les 50 rubis du jour.</p>
+        </div>
+
+        <div id="playCard" class="panel play-card hidden">
+          <div class="profile-row">
+            <div><div class="eyebrow">COMPTE CONNECTÉ</div><h2 id="profileName">Joueur</h2></div>
+            <div class="rubies-box"><span>💎</span><div><b id="rubiesValue">0</b><small>rubis</small></div></div>
+            <button id="dailyBtn" class="daily-btn">🎁 +50 rubis du jour</button>
+            <button id="logoutBtn" class="ghost compact">Déconnexion</button>
+          </div>
+
+          <div class="setup-grid">
+            <label>Avatar<select id="avatarInput"></select></label>
+            <label>Nombre de joueurs<select id="playersInput"><option value="2">2 joueurs</option><option value="3">3 joueurs</option><option value="4">4 joueurs</option><option value="5">5 joueurs</option><option value="6">6 joueurs</option></select></label>
+            <label>Objectif<select id="targetInput"><option value="500">500 points</option><option value="1000">1000 points</option></select></label>
+          </div>
+
+          <div class="tiers" id="tiers">
+            <button class="tier active" data-tier="debutant"><span>🌱 Débutant</span><b>10 💎</b></button>
+            <button class="tier" data-tier="intermediaire"><span>⚡ Intermédiaire</span><b>20 💎</b></button>
+            <button class="tier" data-tier="expert"><span>🔥 Expert</span><b>50 💎</b></button>
+            <button class="tier" data-tier="legende"><span>👑 Légende</span><b>100 💎</b></button>
+          </div>
+
+          <div class="pot-preview"><span>Mise par joueur : <b id="stakePreview">10</b> 💎</span><span>Pot du gagnant : <strong id="potPreview">20</strong> 💎</span></div>
+
+          <div class="lobby-actions">
+            <button id="quickBtn" class="primary big">⚡ Trouver une partie</button>
+            <button id="createBtn" class="secondary big">Créer un salon privé</button>
+          </div>
+          <div class="join-box"><input id="roomCodeInput" maxlength="5" placeholder="CODE" autocomplete="off"><button id="joinBtn" class="secondary">Rejoindre</button></div>
+
+          <div id="queueBox" class="queue-box hidden"><span id="queueText"></span><button id="cancelQueueBtn" class="ghost compact">Annuler</button></div>
+          <div id="roomBox" class="room-box hidden">
+            <div class="room-title">Salon <strong id="roomCodeLabel">-----</strong></div>
+            <div id="roomMeta"></div>
+            <div id="roomPlayers" class="room-players"></div>
+            <button id="startOnlineBtn" class="primary hidden">Lancer la partie</button>
+          </div>
+          <p class="note">Débutant 10 • Intermédiaire 20 • Expert 50 • Légende 100 rubis par joueur. Le gagnant de la partie prend le pot.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="game" class="screen">
+      <div id="connectionBanner" class="connection-banner hidden"></div>
+      <div id="arena" class="arena" data-player-count="2">
+        <div class="felt"></div>
+        <div id="opponents" class="opponents"></div>
+
+        <div class="table-zone">
+          <div class="pile-col"><div id="drawPile" class="pile"><img src="assets/card_back.jpg"><span id="drawCount">0</span></div><b>PIOCHE</b></div>
+          <div class="center-panel">
+            <div id="roundInfo" class="round-info">Manche 1</div>
+            <div id="turnTitle" class="turn-title">Connexion…</div>
+            <div id="turnHint" class="turn-hint">Patientez.</div>
+            <div id="eventLine" class="event-line"></div>
+            <div id="potInGame" class="pot-ingame">💎 Pot : 0</div>
+          </div>
+          <div class="pile-col"><div id="discardPile" class="pile"><img src="assets/card_back.jpg"><span id="discardCount">0</span></div><b>DÉFAUSSE</b></div>
+        </div>
+
+        <section id="humanSeat" class="seat human-seat">
+          <div class="seat-head human-head">
+            <span id="meAvatar" class="avatar"></span>
+            <div><b id="meName">Vous</b><small>VOTRE MAIN</small><div id="handEval" class="hand-eval">-</div></div>
+            <span id="meBlocked" class="badge danger hidden">BLOQUÉ</span><span id="meDealer" class="badge hidden">DONNEUR</span>
+          </div>
+          <div id="humanHand" class="human-hand"></div>
+          <div id="actions" class="actions"></div>
+          <div id="meScore" class="score-plate human-score">0 pts</div>
+          <div class="reactions"><button data-emoji="😄">😄</button><button data-emoji="😂">😂</button><button data-emoji="😱">😱</button><button data-emoji="😡">😡</button></div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <div id="fxLayer" class="fx-layer"></div>
+  <div id="eventBurst" class="event-burst hidden"><div id="eventBurstArt" class="event-burst-art"></div><div class="event-copy"><div id="eventBurstTitle"></div><div id="eventBurstText"></div></div></div>
+  <div id="roundModal" class="modal hidden"><div class="modal-card result-card"><h2 id="resultTitle">Fin de manche</h2><p id="resultNote"></p><p id="rubiesResult" class="rubies-result"></p><div id="resultHands" class="result-hands"></div><button id="nextRoundBtn" class="primary big hidden">Manche suivante</button></div></div>
+  <div id="rulesModal" class="modal hidden"><div class="modal-card rules-card"><button id="closeRules" class="close">×</button><h2>Règles POK POK</h2><img id="rulePage" src="assets/rules/page-01.jpg"><div class="rule-nav"><button id="prevRule">←</button><span id="ruleCounter">1 / 16</span><button id="nextRule">→</button></div></div></div>
+  <div id="toast" class="toast hidden"></div>
+</div>
+<audio id="menuMusic" src="assets/audio/menu_loop.wav" loop preload="auto"></audio>
+<audio id="gameMusic" src="assets/audio/game_loop.wav" loop preload="auto"></audio>
+<script src="online.js"></script>
+</body>
+</html>
